@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SDD — Sistema de Controle de Estoque</title>
+  <style>
+    :root {
+      --bg: #f7f8fa;
+      --surface: #ffffff;
+      --ink: #1c2330;
+      --muted: #5b6675;
+      --border: #e2e6ec;
+      --primary: #1f3a8a;
+      --primary-soft: #eef2ff;
+      --accent: #0e7c66;
+      --warn-bg: #fff8e6;
+      --warn-border: #f0d081;
+      --code-bg: #f0f2f6;
+      --shadow: 0 1px 3px rgba(16, 24, 40, .06), 0 1px 2px rgba(16, 24, 40, .04);
+      --radius: 10px;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0f1420;
+        --surface: #161c29;
+        --ink: #e7ebf2;
+        --muted: #9aa6b6;
+        --border: #29313f;
+        --primary: #8ea6ff;
+        --primary-soft: #1a2236;
+        --accent: #4fd1b0;
+        --warn-bg: #2b2410;
+        --warn-border: #5c4d18;
+        --code-bg: #1c2432;
+        --shadow: none;
+      }
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.65;
+      font-size: 16px;
+    }
+    .wrap { max-width: 960px; margin: 0 auto; padding: 32px 20px 96px; }
+
+    header.doc {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 32px;
+      box-shadow: var(--shadow);
+      margin-bottom: 28px;
+    }
+    header.doc h1 { margin: 0 0 6px; font-size: 1.85rem; color: var(--primary); letter-spacing: -.01em; }
+    header.doc .subtitle { color: var(--muted); font-size: 1.02rem; margin: 0; }
+    .meta-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 8px 24px; margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--border);
+      font-size: .9rem;
+    }
+    .meta-grid div span { color: var(--muted); display: block; font-size: .78rem; text-transform: uppercase; letter-spacing: .04em; }
+    .meta-grid div strong { font-weight: 600; }
+
+    nav.toc {
+      background: var(--primary-soft);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 28px;
+      margin-bottom: 32px;
+    }
+    nav.toc h2 { margin: 0 0 12px; font-size: 1.05rem; color: var(--primary); }
+    nav.toc ol { margin: 0; padding-left: 20px; columns: 2; column-gap: 40px; }
+    @media (max-width: 620px) { nav.toc ol { columns: 1; } }
+    nav.toc li { margin: 4px 0; }
+    nav.toc a { color: var(--ink); text-decoration: none; }
+    nav.toc a:hover { color: var(--primary); text-decoration: underline; }
+
+    section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 8px 32px 28px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow);
+    }
+    section > h2 {
+      font-size: 1.4rem; color: var(--primary); margin-top: 28px;
+      padding-bottom: 10px; border-bottom: 2px solid var(--border); scroll-margin-top: 16px;
+    }
+    h3 { font-size: 1.12rem; margin-top: 26px; color: var(--ink); }
+    h4 { font-size: 1rem; margin: 18px 0 6px; color: var(--muted); text-transform: uppercase; letter-spacing: .03em; }
+    p { margin: 10px 0; }
+    a { color: var(--primary); }
+    ul, ol { padding-left: 22px; }
+    li { margin: 5px 0; }
+    strong { font-weight: 650; }
+
+    code {
+      background: var(--code-bg); padding: .12em .4em; border-radius: 5px;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace; font-size: .88em;
+    }
+    pre {
+      background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px;
+      padding: 16px 18px; overflow-x: auto; font-size: .84rem; line-height: 1.5;
+    }
+    pre code { background: none; padding: 0; font-size: inherit; }
+
+    table {
+      width: 100%; border-collapse: collapse; margin: 16px 0; font-size: .9rem;
+      display: block; overflow-x: auto;
+    }
+    @media (min-width: 720px) { table { display: table; } }
+    th, td { border: 1px solid var(--border); padding: 9px 12px; text-align: left; vertical-align: top; }
+    th { background: var(--primary-soft); font-weight: 650; color: var(--ink); white-space: nowrap; }
+    tbody tr:nth-child(even) { background: color-mix(in srgb, var(--surface) 92%, var(--border)); }
+
+    .badge {
+      display: inline-block; font-size: .74rem; font-weight: 600; padding: 2px 9px;
+      border-radius: 999px; vertical-align: middle;
+    }
+    .badge.pending { background: var(--warn-bg); border: 1px solid var(--warn-border); color: var(--muted); }
+    .badge.done { background: color-mix(in srgb, var(--accent) 18%, transparent); border: 1px solid var(--accent); color: var(--accent); }
+
+    .callout {
+      background: var(--warn-bg); border: 1px solid var(--warn-border); border-left-width: 4px;
+      border-radius: 8px; padding: 12px 16px; margin: 16px 0; font-size: .92rem;
+    }
+    .msg { color: var(--accent); font-style: italic; }
+    .top-link { float: right; font-size: .8rem; font-weight: 400; }
+    footer { text-align: center; color: var(--muted); font-size: .82rem; margin-top: 40px; }
+    hr { border: none; border-top: 1px solid var(--border); margin: 26px 0; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="doc" id="topo">
+    <h1>Software Design Document (SDD)</h1>
+    <p class="subtitle">Sistema de Controle de Estoque — Projeto Integrador Full Stack (Fase 2)</p>
+    <div class="meta-grid">
+      <div><span>Projeto</span><strong>Controle de Estoque</strong></div>
+      <div><span>Versão do SDD</span><strong>0.1 (inicial)</strong></div>
+      <div><span>Última atualização</span><strong>2026-08-08</strong></div>
+      <div><span>Etapa</span><strong>0 — Documentação base</strong></div>
+    </div>
+  </header>
+
+  <nav class="toc">
+    <h2>Sumário</h2>
+    <ol>
+      <li><a href="#introducao">Introdução e Objetivo</a></li>
+      <li><a href="#escopo">Escopo Funcional</a></li>
+      <li><a href="#arquitetura">Arquitetura Geral</a></li>
+      <li><a href="#dominio">Modelo de Domínio</a></li>
+      <li><a href="#decisoes">Decisões Técnicas</a></li>
+      <li><a href="#revisoes">Histórico de Revisões</a></li>
+    </ol>
+  </nav>
+
+  <!-- ============================================================ -->
+  <section id="introducao">
+    <h2>1. Introdução e Objetivo <a class="top-link" href="#topo">▲ topo</a></h2>
+    <p>
+      Este documento descreve o desenho técnico do <strong>Sistema de Controle de Estoque</strong>,
+      desenvolvido como parte da Fase 2 do Projeto Integrador Full Stack. Ele serve como referência
+      única e <strong>viva</strong> da arquitetura, do modelo de dados e das decisões técnicas do
+      projeto, sendo <strong>incrementado a cada etapa</strong> (não recriado do zero).
+    </p>
+    <p>
+      O sistema resolve um problema recorrente da gestão empresarial: <strong>controlar com precisão
+      os produtos em estoque e seus fornecedores</strong>. A partir das histórias de usuário
+      levantadas no desafio, o objetivo é entregar uma aplicação full-stack que permita a um gerente
+      de compras/estoque cadastrar fornecedores, cadastrar produtos e gerenciar a relação
+      muitos-para-muitos entre eles.
+    </p>
+    <h3>Público-alvo do documento</h3>
+    <ul>
+      <li><strong>Desenvolvedores</strong> — como guia de implementação e de convenções.</li>
+      <li><strong>Avaliadores do Projeto Integrador</strong> — como registro das decisões de projeto.</li>
+      <li><strong>Manutenção futura</strong> — como ponto de partida para evolução do sistema.</li>
+    </ul>
+    <h3>Documentos relacionados</h3>
+    <ul>
+      <li><code>README.md</code> — porta de entrada do repositório (como rodar, stack, status).</li>
+      <li><code>docs/00-visao-geral.md</code> — documento mestre com o histórico de etapas.</li>
+      <li><strong>Swagger UI</strong> (<code>/docs</code>) — documentação viva da API REST (a partir do backend).</li>
+    </ul>
+  </section>
+
+  <!-- ============================================================ -->
+  <section id="escopo">
+    <h2>2. Escopo Funcional <a class="top-link" href="#topo">▲ topo</a></h2>
+    <p>
+      O escopo é composto por <strong>três features</strong>, cada uma com cenários de sucesso e de
+      erro cujas mensagens ao usuário devem ser reproduzidas fielmente pela aplicação.
+    </p>
+
+    <h3>2.1 Fornecedor <span class="badge pending">a implementar</span></h3>
+    <p><em>Como gerente de compras, quero cadastrar fornecedores para gerenciar e rastrear as
+      informações relevantes sobre os fornecedores com quem faço negócios.</em></p>
+    <p><strong>Campos:</strong> nome da empresa, CNPJ, endereço, telefone, e-mail e contato principal
+      (todos obrigatórios). O CNPJ é <strong>único</strong> no sistema.</p>
+    <h4>Cenários</h4>
+    <ul>
+      <li><strong>Sucesso:</strong> dados válidos e CNPJ inédito → cadastra e exibe
+        <span class="msg">"Fornecedor cadastrado com sucesso!"</span></li>
+      <li><strong>CNPJ duplicado:</strong> já existe fornecedor com o mesmo CNPJ → bloqueia e exibe
+        <span class="msg">"Fornecedor com esse CNPJ já está cadastrado!"</span></li>
+      <li><strong>Dados inválidos:</strong> campos obrigatórios em branco ou formato inválido →
+        bloqueia e exibe mensagens de erro <strong>ao lado de cada campo</strong>.</li>
+    </ul>
+
+    <h3>2.2 Produto <span class="badge pending">a implementar</span></h3>
+    <p><em>Como gerente de estoque, quero cadastrar produtos para gerenciar e rastrear as informações
+      relevantes sobre os produtos disponíveis no estoque.</em></p>
+    <p><strong>Campos:</strong> nome (obrigatório), código de barras (único quando informado),
+      descrição (obrigatória), quantidade em estoque, categoria (obrigatória — lista pré-definida
+      <em>Eletrônicos, Alimentos, Vestuário</em> e opção <em>Outro</em>), data de validade (opcional)
+      e imagem (opcional).</p>
+    <h4>Cenários</h4>
+    <ul>
+      <li><strong>Sucesso:</strong> dados válidos e código de barras inédito → cadastra e exibe
+        <span class="msg">"Produto cadastrado com sucesso!"</span></li>
+      <li><strong>Código de barras duplicado:</strong> já existe produto com o mesmo código → bloqueia
+        e exibe <span class="msg">"Produto com este código de barras já está cadastrado!"</span></li>
+      <li><strong>Dados inválidos:</strong> campos obrigatórios em branco ou formato inválido →
+        bloqueia e exibe mensagens de erro <strong>ao lado de cada campo</strong>.</li>
+    </ul>
+
+    <h3>2.3 Associação Produto/Fornecedor <span class="badge pending">a implementar</span></h3>
+    <p><em>Como gerente de estoque, quero associar fornecedores aos produtos para rastrear de quais
+      fornecedores adquiro cada produto e gerenciar melhor as relações de compra.</em></p>
+    <p>Relação <strong>muitos-para-muitos</strong>: um produto pode ter vários fornecedores e um
+      fornecedor pode fornecer vários produtos.</p>
+    <h4>Cenários</h4>
+    <ul>
+      <li><strong>Associar com sucesso:</strong> seleciona um fornecedor e confirma → associa e exibe
+        <span class="msg">"Fornecedor associado com sucesso ao produto!"</span></li>
+      <li><strong>Associação duplicada:</strong> fornecedor já associado ao produto → bloqueia e exibe
+        <span class="msg">"Fornecedor já está associado a este produto!"</span></li>
+      <li><strong>Desassociar:</strong> remove um fornecedor associado → exibe
+        <span class="msg">"Fornecedor desassociado com sucesso!"</span></li>
+    </ul>
+
+    <div class="callout">
+      <strong>Status de implementação:</strong> nesta Etapa 0, todas as features estão apenas
+      <em>especificadas</em>. Conforme cada módulo do backend for concluído, o respectivo item será
+      marcado como <span class="badge done">implementado</span>, com referência à tag correspondente
+      na Swagger UI (<code>fornecedores</code>, <code>produtos</code>, <code>associacao</code>).
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <section id="arquitetura">
+    <h2>3. Arquitetura Geral <a class="top-link" href="#topo">▲ topo</a></h2>
+    <p>
+      O sistema é um <strong>monorepo</strong> com dois aplicativos independentes — a API (backend) e
+      a interface web (frontend) — que se comunicam por <strong>HTTP/REST</strong>. A persistência é
+      feita em <strong>SQLite</strong> via Sequelize, e o contrato da API é publicado de forma viva
+      pela <strong>Swagger UI</strong>.
+    </p>
+
+    <h4>Diagrama de arquitetura (visão de alto nível)</h4>
+    <pre><code>            ┌──────────────────────────────────────────────────────────┐
+            │                    MONOREPO (estoque-app)                  │
+            │                                                            │
+            │   apps/web  (Frontend)            apps/api  (Backend)      │
+            │  ┌───────────────────┐          ┌───────────────────────┐ │
+            │  │   Next.js          │  HTTP/   │   NestJS (REST)       │ │
+            │  │   (App Router)     │  JSON    │  ┌─────────────────┐  │ │
+            │  │                    │ ───────▶ │  │ Controllers     │  │ │
+            │  │  Telas:            │  REST    │  │ Services (regras│  │ │
+            │  │   /fornecedores    │ ◀─────── │  │   de negócio)   │  │ │
+            │  │   /produtos        │          │  │ DTOs (validação)│  │ │
+            │  │   /produtos/[id]/  │          │  └────────┬────────┘  │ │
+            │  │        fornecedores│          │           │ Sequelize │ │
+            │  └───────────────────┘          │           ▼           │ │
+            │                                 │  ┌─────────────────┐  │ │
+            │                                 │  │  SQLite (arquivo)│  │ │
+            │                                 │  │  estoque.sqlite  │  │ │
+            │                                 │  └─────────────────┘  │ │
+            │                                 │                        │ │
+            │                                 │  Swagger UI  ──▶ /docs  │ │
+            │                                 └───────────────────────┘ │
+            │                                                            │
+            │   packages/shared-types  (tipos/DTOs compartilhados — futuro)│
+            └──────────────────────────────────────────────────────────┘</code></pre>
+
+    <h3>3.1 Componentes</h3>
+    <ul>
+      <li><strong>apps/api (NestJS):</strong> expõe a API REST. Organização <em>feature-first</em>
+        (um módulo por domínio: <code>fornecedores</code>, <code>produtos</code>,
+        <code>produto-fornecedor</code>), cada módulo com <em>controller</em>, <em>service</em>,
+        <em>module</em>, <em>DTOs</em> e <em>entity</em>.</li>
+      <li><strong>apps/web (Next.js):</strong> interface web (App Router) que consome a API via
+        <code>NEXT_PUBLIC_API_URL</code>, seguindo o contrato publicado na Swagger.</li>
+      <li><strong>SQLite + Sequelize:</strong> persistência local em arquivo; schema versionado por
+        <em>migrations</em> e populado por <em>seeders</em> (sequelize-cli).</li>
+      <li><strong>Swagger UI (<code>/docs</code>):</strong> documentação viva do contrato REST,
+        gerada por <code>@nestjs/swagger</code> — fonte oficial dos endpoints da API.</li>
+      <li><strong>packages/shared-types:</strong> reservado para tipos/DTOs compartilhados entre
+        backend e frontend em etapas futuras.</li>
+    </ul>
+
+    <div class="callout">
+      O diagrama e a estrutura acima representam o <strong>estado-alvo</strong>. Detalhes concretos
+      (árvore real de pastas, configuração do Swagger, caminho do arquivo SQLite) serão adicionados a
+      esta seção conforme as etapas de scaffold forem concluídas.
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <section id="dominio">
+    <h2>4. Modelo de Domínio <a class="top-link" href="#topo">▲ topo</a></h2>
+    <p>
+      Três entidades compõem o domínio: <strong>Fornecedor</strong>, <strong>Produto</strong> e a
+      entidade de associação <strong>ProdutoFornecedor</strong>, que materializa a relação N:N.
+    </p>
+
+    <h4>Diagrama entidade-relacionamento (texto)</h4>
+    <pre><code>  Fornecedor 1 ────&lt; ProdutoFornecedor &gt;──── 1 Produto
+                     (produto_id, fornecedor_id)
+                     UNIQUE(produto_id, fornecedor_id)
+
+  Um Produto  N ──── N  Fornecedor   (muitos-para-muitos)</code></pre>
+
+    <h3>4.1 Fornecedor <code>(tabela: fornecedores)</code></h3>
+    <table>
+      <thead><tr><th>Atributo</th><th>Tipo (Sequelize)</th><th>Obrigatório</th><th>Regras / Observações</th></tr></thead>
+      <tbody>
+        <tr><td><code>id</code></td><td>INTEGER</td><td>sim</td><td>PK, auto-incremento</td></tr>
+        <tr><td><code>nome_empresa</code></td><td>STRING</td><td>sim</td><td>Nome da empresa</td></tr>
+        <tr><td><code>cnpj</code></td><td>STRING</td><td>sim</td><td><strong>UNIQUE</strong> · formato <code>00.000.000/0000-00</code></td></tr>
+        <tr><td><code>endereco</code></td><td>TEXT</td><td>sim</td><td>Endereço completo</td></tr>
+        <tr><td><code>telefone</code></td><td>STRING</td><td>sim</td><td>Formato <code>(00) 0000-0000</code></td></tr>
+        <tr><td><code>email</code></td><td>STRING</td><td>sim</td><td>Formato de e-mail válido</td></tr>
+        <tr><td><code>contato_principal</code></td><td>STRING</td><td>sim</td><td>Nome do contato principal</td></tr>
+        <tr><td><code>created_at</code> / <code>updated_at</code></td><td>DATE</td><td>sim</td><td>Timestamps automáticos</td></tr>
+      </tbody>
+    </table>
+
+    <h3>4.2 Produto <code>(tabela: produtos)</code></h3>
+    <table>
+      <thead><tr><th>Atributo</th><th>Tipo (Sequelize)</th><th>Obrigatório</th><th>Regras / Observações</th></tr></thead>
+      <tbody>
+        <tr><td><code>id</code></td><td>INTEGER</td><td>sim</td><td>PK, auto-incremento</td></tr>
+        <tr><td><code>nome</code></td><td>STRING</td><td>sim</td><td>Nome do produto</td></tr>
+        <tr><td><code>codigo_barras</code></td><td>STRING</td><td>não</td><td><strong>UNIQUE</strong> quando informado (múltiplos NULL permitidos no SQLite)</td></tr>
+        <tr><td><code>descricao</code></td><td>TEXT</td><td>sim</td><td>Descrição breve do produto</td></tr>
+        <tr><td><code>quantidade_estoque</code></td><td>INTEGER</td><td>não</td><td>Quantidade disponível (padrão <code>0</code>)</td></tr>
+        <tr><td><code>categoria</code></td><td>STRING</td><td>sim</td><td>Lista: <em>Eletrônicos, Alimentos, Vestuário, Outro</em></td></tr>
+        <tr><td><code>data_validade</code></td><td>DATEONLY</td><td>não</td><td>Opcional (<em>nullable</em>)</td></tr>
+        <tr><td><code>imagem_url</code></td><td>STRING</td><td>não</td><td>Opcional — campo <em>"imagem"</em> do PDF, armazenado como URL/referência (<em>nullable</em>)</td></tr>
+        <tr><td><code>created_at</code> / <code>updated_at</code></td><td>DATE</td><td>sim</td><td>Timestamps automáticos</td></tr>
+      </tbody>
+    </table>
+
+    <h3>4.3 ProdutoFornecedor <code>(tabela: produto_fornecedores)</code></h3>
+    <table>
+      <thead><tr><th>Atributo</th><th>Tipo (Sequelize)</th><th>Obrigatório</th><th>Regras / Observações</th></tr></thead>
+      <tbody>
+        <tr><td><code>id</code></td><td>INTEGER</td><td>sim</td><td>PK, auto-incremento</td></tr>
+        <tr><td><code>produto_id</code></td><td>INTEGER</td><td>sim</td><td>FK → <code>produtos.id</code></td></tr>
+        <tr><td><code>fornecedor_id</code></td><td>INTEGER</td><td>sim</td><td>FK → <code>fornecedores.id</code></td></tr>
+        <tr><td><code>created_at</code> / <code>updated_at</code></td><td>DATE</td><td>sim</td><td>Timestamps automáticos</td></tr>
+      </tbody>
+    </table>
+    <p><strong>Restrição de unicidade:</strong> índice único composto em
+      <code>(produto_id, fornecedor_id)</code> — impede associar o mesmo fornecedor ao mesmo produto
+      mais de uma vez (base do cenário <span class="msg">"Fornecedor já está associado a este produto!"</span>).</p>
+
+    <div class="callout">
+      Os tipos acima refletem a intenção de projeto. O schema definitivo (tipos de coluna exatos e
+      constraints) será consolidado nesta seção na etapa de <em>migrations</em> (sequelize-cli).
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <section id="decisoes">
+    <h2>5. Decisões Técnicas <a class="top-link" href="#topo">▲ topo</a></h2>
+
+    <h3>Por que NestJS?</h3>
+    <p>
+      Framework Node.js opinativo e modular, com <strong>injeção de dependências</strong> e
+      arquitetura em módulos/controllers/services que favorece separação de responsabilidades e
+      testabilidade. Integra-se nativamente a <code>class-validator</code> (validação de DTOs) e a
+      <code>@nestjs/swagger</code> (documentação automática), atendendo diretamente aos requisitos de
+      validação por campo e de API documentada. Foi a stack sugerida no material do desafio.
+    </p>
+
+    <h3>Por que Sequelize (+ sequelize-cli)?</h3>
+    <p>
+      ORM maduro para Node.js com bom suporte a SQLite e a relações <strong>muitos-para-muitos</strong>
+      (<code>belongsToMany</code>), essenciais para a associação Produto/Fornecedor. O
+      <code>sequelize-cli</code> traz <strong>migrations</strong> e <strong>seeders</strong>,
+      permitindo versionar a evolução do schema e popular dados de exemplo de forma reproduzível.
+    </p>
+
+    <h3>Por que SQLite?</h3>
+    <p>
+      Banco relacional <strong>sem servidor</strong>, baseado em arquivo, com configuração mínima —
+      ideal para o MVP e para o contexto acadêmico do projeto (o próprio desafio sugere o SQLite para
+      teste da aplicação). Mantém a portabilidade e, por usar SQL padrão via Sequelize, permite migrar
+      para PostgreSQL/MySQL no futuro com baixo atrito.
+    </p>
+
+    <h3>Por que Next.js?</h3>
+    <p>
+      Framework React de referência, com <strong>App Router</strong>, TypeScript, roteamento por
+      arquivos e boa experiência de desenvolvimento. Suporta as telas do desafio
+      (<code>/fornecedores</code>, <code>/produtos</code>, <code>/produtos/[id]/fornecedores</code>) e
+      integra-se facilmente ao consumo de uma API REST. Foi a stack de frontend sugerida no material.
+    </p>
+
+    <h3>Decisões transversais</h3>
+    <ul>
+      <li><strong>Monorepo (apps/api + apps/web):</strong> mantém backend e frontend no mesmo
+        repositório, facilitando versionamento conjunto e futuro compartilhamento de tipos via
+        <code>packages/shared-types</code>.</li>
+      <li><strong>Swagger como contrato vivo:</strong> a documentação da API é gerada a partir do
+        código, reduzindo divergência entre documentação e implementação.</li>
+      <li><strong>Conventional Commits:</strong> histórico de commits padronizado e legível
+        (<code>feat</code>, <code>fix</code>, <code>docs</code>, <code>chore</code>).</li>
+      <li><strong>Documentação em camadas:</strong> README (como rodar) · visão geral (histórico) ·
+        SDD (desenho técnico) · Swagger (API) — cada artefato com um propósito claro.</li>
+    </ul>
+  </section>
+
+  <!-- ============================================================ -->
+  <section id="revisoes">
+    <h2>6. Histórico de Revisões <a class="top-link" href="#topo">▲ topo</a></h2>
+    <p>Registro das mudanças deste SDD ao longo das etapas do projeto.</p>
+    <table>
+      <thead><tr><th>Data</th><th>Etapa</th><th>Versão</th><th>Resumo da mudança</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>2026-08-08</td>
+          <td>0 — Documentação base</td>
+          <td>0.1</td>
+          <td>Criação inicial do SDD: introdução, escopo funcional das 3 features, arquitetura geral
+            (monorepo, REST, SQLite, Next.js), modelo de domínio (Fornecedor, Produto,
+            ProdutoFornecedor) e decisões técnicas.</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="callout">
+      Este arquivo é <strong>incremental</strong>: cada etapa futura adiciona uma linha nesta tabela e
+      atualiza as seções afetadas, em vez de recriar o documento.
+    </div>
+  </section>
+
+  <footer>
+    Software Design Document · Sistema de Controle de Estoque · Projeto Integrador Full Stack —
+    Faculdade Gran
+  </footer>
+
+</div>
+</body>
+</html>
