@@ -144,9 +144,9 @@
     <p class="subtitle">Sistema de Controle de Estoque — Projeto Integrador Full Stack (Fase 2)</p>
     <div class="meta-grid">
       <div><span>Projeto</span><strong>Controle de Estoque</strong></div>
-      <div><span>Versão do SDD</span><strong>0.7</strong></div>
+      <div><span>Versão do SDD</span><strong>0.8</strong></div>
       <div><span>Última atualização</span><strong>2026-08-09</strong></div>
-      <div><span>Etapa</span><strong>6 — Associação (backend completo)</strong></div>
+      <div><span>Etapa</span><strong>7 — Scaffold do frontend</strong></div>
     </div>
   </header>
 
@@ -158,6 +158,7 @@
       <li><a href="#arquitetura">Arquitetura Geral</a></li>
       <li><a href="#dominio">Modelo de Domínio</a></li>
       <li><a href="#decisoes">Decisões Técnicas</a></li>
+      <li><a href="#frontend">Frontend</a></li>
       <li><a href="#revisoes">Histórico de Revisões</a></li>
     </ol>
   </nav>
@@ -518,8 +519,74 @@
   </section>
 
   <!-- ============================================================ -->
+  <section id="frontend">
+    <h2>6. Frontend <a class="top-link" href="#topo">▲ topo</a></h2>
+    <p>
+      O frontend (<code>apps/web</code>) é uma aplicação <strong>Next.js 15 (App Router)</strong> em
+      TypeScript que consome a API REST publicada na Swagger. Foi <strong>scaffoldado na Etapa 7</strong>,
+      com um design system mínimo e as três telas do desafio.
+    </p>
+
+    <h3>6.1 Arquitetura de telas</h3>
+    <p>Organização <em>App Router</em> (um diretório por rota), com componentes de UI reutilizáveis e
+      um client HTTP centralizado:</p>
+    <pre><code>apps/web/
+├── app/
+│   ├── layout.tsx                # Navbar + ToastProvider (feedback global)
+│   ├── globals.css               # design tokens + estilos de componentes
+│   ├── page.tsx                  # home (atalhos)
+│   ├── fornecedores/             # lista + cadastro (modal) + remoção
+│   ├── produtos/                 # lista + cadastro (modal) + remoção
+│   └── produtos/[id]/fornecedores/  # associar / desassociar fornecedores
+├── components/{layout,ui}/       # Navbar + Button, Input, Select, Modal, Toast, Table…
+└── lib/{api.ts,types.ts}         # client HTTP tipado + tipos do domínio</code></pre>
+    <table>
+      <thead><tr><th>Rota</th><th>Tela</th><th>Endpoints consumidos</th></tr></thead>
+      <tbody>
+        <tr><td><code>/fornecedores</code></td><td>Lista e cadastro de fornecedores</td>
+          <td><code>GET/POST /fornecedores</code>, <code>DELETE /fornecedores/:id</code></td></tr>
+        <tr><td><code>/produtos</code></td><td>Lista e cadastro de produtos</td>
+          <td><code>GET/POST /produtos</code>, <code>DELETE /produtos/:id</code></td></tr>
+        <tr><td><code>/produtos/[id]/fornecedores</code></td><td>Associação Produto↔Fornecedor</td>
+          <td><code>GET/POST /produtos/:id/fornecedores</code>,
+            <code>DELETE /produtos/:id/fornecedores/:fornecedorId</code></td></tr>
+      </tbody>
+    </table>
+
+    <h3>6.2 Design system</h3>
+    <ul>
+      <li><strong>Tokens</strong> (<code>globals.css</code>): paleta alinhada a este SDD (primária
+        azul, sucesso verde, perigo vermelho), tipografia, espaçamento (escala 4px), raio e sombra —
+        com <strong>tema claro e escuro</strong> (<code>prefers-color-scheme</code>).</li>
+      <li><strong>Componentes reutilizáveis:</strong> <code>Button</code> (variantes + loading),
+        <code>Input</code>/<code>Textarea</code>/<code>Select</code>, <code>Field</code> (rótulo +
+        erro por campo), <code>Table</code> (genérica, com estado vazio), <code>Modal</code>
+        (acessível) e <code>Toast</code> (sucesso/erro).</li>
+      <li><strong>Princípios de UX:</strong> hierarquia visual clara, <strong>feedback imediato por
+        campo</strong> (erros 400 distribuídos aos campos), estados de loading/sucesso/erro e
+        mensagens fiéis às do desafio.</li>
+    </ul>
+
+    <h3>6.3 Integração com a API</h3>
+    <p>
+      O client <code>lib/api.ts</code> usa <code>fetch</code> apontando para
+      <code>NEXT_PUBLIC_API_URL</code> (padrão <code>http://localhost:3000</code>). Um tipo
+      <code>ApiError</code> normaliza os erros do NestJS: validações (array de mensagens) viram erros
+      por campo; conflitos/404 usam a mensagem do backend (texto do desafio). Para o consumo pelo
+      navegador, a API habilita <strong>CORS</strong> (<code>app.enableCors</code>, configurável por
+      <code>CORS_ORIGIN</code>). O frontend roda na porta <strong>3001</strong> (a API usa a 3000).
+    </p>
+
+    <div class="callout">
+      <strong>Scaffold do frontend concluído <span class="badge done">Etapa 7</span>.</strong> Build
+      de produção (Next 15) e lint/type-check verdes; telas servidas e integração com a API validada
+      (CORS + rotas respondendo). O refinamento das telas segue na Etapa 8.
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
   <section id="revisoes">
-    <h2>6. Histórico de Revisões <a class="top-link" href="#topo">▲ topo</a></h2>
+    <h2>7. Histórico de Revisões <a class="top-link" href="#topo">▲ topo</a></h2>
     <p>Registro das mudanças deste SDD ao longo das etapas do projeto.</p>
     <table>
       <thead><tr><th>Data</th><th>Etapa</th><th>Versão</th><th>Resumo da mudança</th></tr></thead>
@@ -581,6 +648,14 @@
             de junção <code>ProdutoFornecedor</code> + <code>belongsToMany</code>, endpoints de
             associar/desassociar/listar sob a tag <code>associacao</code> e testes unitários.
             Registrada a nota de <strong>backend funcionalmente completo</strong> (as 3 features).</td>
+        </tr>
+        <tr>
+          <td>2026-08-09</td>
+          <td>7 — Scaffold do frontend</td>
+          <td>0.8</td>
+          <td>Nova seção <strong>6. Frontend</strong>: arquitetura de telas (Next.js App Router),
+            design system (tokens + componentes) e integração com a API (client <code>fetch</code> via
+            <code>NEXT_PUBLIC_API_URL</code> + CORS no backend). Seção de Revisões renumerada para 7.</td>
         </tr>
       </tbody>
     </table>

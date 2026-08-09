@@ -71,7 +71,7 @@ detalhamento e um commit no padrão *Conventional Commits*.
 | **4** | 2026-08-09 | Módulo de Fornecedor completo em `apps/api`: entity, DTOs validados (`class-validator` + `@ApiProperty`), service com regra de **CNPJ único** e CRUD REST documentado na Swagger UI (tag `fornecedores`). Toolchain de testes (Jest + @swc/jest): 16 testes verdes. CRUD validado por `curl` (201/409/400/404/204). | `docs/04-modulo-fornecedor.md` | `feat(api): CRUD de fornecedor com validacoes e documentacao swagger` |
 | **5** | 2026-08-09 | Módulo de Produto completo em `apps/api`: entity, DTOs validados (`categoria` como enum *Eletrônicos/Alimentos/Vestuário/Outro*), service com regra de **código de barras único** (quando informado) e CRUD REST documentado na Swagger UI (tag `produtos`). Testes: 34 verdes no total. CRUD validado por `curl` (201/409/400/404/204). | `docs/05-modulo-produto.md` | `feat(api): CRUD de produto com validacoes e documentacao swagger` |
 | **6** | 2026-08-09 | Módulo de Associação (N:N) completo em `apps/api`: model de junção `ProdutoFornecedor` + `belongsToMany` nas entities; endpoints de associar (bloqueando duplicidade), desassociar e listar (fornecedores↔produtos) sob a tag `associacao`. **Backend funcionalmente completo** (3 features). Testes: 43 verdes no total. Fluxo N:N validado por `curl` (201/409/200/404/400). | `docs/06-modulo-associacao.md` | `feat(api): associacao muitos-para-muitos entre produto e fornecedor` |
-| 7 | — | Scaffold do frontend Next.js + design system. | `docs/07-scaffold-frontend.md` | *pendente* |
+| **7** | 2026-08-09 | Scaffold do frontend em `apps/web`: Next.js 15 (App Router) + TS/ESLint/Prettier; design system mínimo (tokens + Button/Input/Select/Modal/Toast/Table); client HTTP tipado consumindo `NEXT_PUBLIC_API_URL`; telas `/fornecedores`, `/produtos` e `/produtos/[id]/fornecedores`. CORS habilitado na API. Build/lint verdes e rotas servidas (porta 3001). | `docs/07-scaffold-frontend.md` | `chore(web): scaffold Next.js com design system inicial` |
 | 8 | — | Telas de Fornecedor, Produto e Associação. | `docs/08-telas-frontend.md` | *pendente* |
 | 9 | — | Consolidação final da documentação. | — | *pendente* |
 
@@ -79,10 +79,10 @@ detalhamento e um commit no padrão *Conventional Commits*.
 
 ## 4. Próximos Passos
 
-- **Backend concluído** (Etapas 2–6): as três features estão implementadas, validadas e documentadas
-  na Swagger UI.
-- **Etapa 7:** scaffold do frontend (Next.js — App Router) e design system, consumindo a API REST
-  documentada.
+- **Backend concluído** (Etapas 2–6) e **frontend scaffoldado** (Etapa 7): as três telas consomem a
+  API REST documentada.
+- **Etapa 8:** refinamento das telas (edição, busca/filtros, paginação e polimento de UX),
+  consolidando a integração frontend ↔ API.
 
 > Este documento deve ser atualizado ao final de cada etapa: nova linha no *Histórico de Etapas*
 > (com data, resumo, `.md` e commit) e ajuste dos *Próximos Passos*.

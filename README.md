@@ -112,7 +112,27 @@ Com a API no ar (**backend completo**):
 
 ### Frontend (`apps/web`)
 
-> ⏳ A detalhar — o scaffold do Next.js será feito na **Etapa 7**.
+Aplicação **Next.js 15 (App Router)** que consome a API. Rode **com o backend no ar**.
+
+```bash
+# a partir da raiz do repositório
+cd apps/web
+
+# 1. Instalar dependências
+npm install
+
+# 2. (opcional) configurar a URL da API
+cp .env.example .env.local   # ajuste NEXT_PUBLIC_API_URL (padrão http://localhost:3000)
+
+# 3. Subir o frontend (porta 3001, para não conflitar com a API na 3000)
+npm run dev                  # http://localhost:3001
+```
+
+Telas: **/fornecedores**, **/produtos** e **/produtos/[id]/fornecedores** (associação). Scripts:
+`npm run dev` · `npm run build` · `npm run start` · `npm run lint` · `npm run format`.
+
+> **CORS:** a API já habilita CORS (`app.enableCors`, configurável por `CORS_ORIGIN`) para o
+> navegador consumir os endpoints a partir do frontend.
 
 ---
 
@@ -128,7 +148,7 @@ Com a API no ar (**backend completo**):
 
 ## Status do Projeto
 
-**Etapa atual:** `Etapa 6 — Associação (N:N)` ✅ · **Backend completo** 🎉
+**Etapa atual:** `Etapa 7 — Scaffold do frontend (Next.js)` ✅ · **Backend completo** 🎉
 
 | Área | Situação |
 | ---- | -------- |
@@ -139,8 +159,8 @@ Com a API no ar (**backend completo**):
 | 🏢 Módulo Fornecedor (CRUD + validações) | ✅ Concluída |
 | 📦 Módulo Produto (CRUD + validações) | ✅ Concluída |
 | 🔗 Módulo Associação Produto/Fornecedor (N:N) | ✅ Concluída |
-| 🖥️ Frontend — scaffold Next.js + design system | ⏳ Pendente |
-| 🧩 Telas (Fornecedor, Produto, Associação) | ⏳ Pendente |
+| 🖥️ Frontend — scaffold Next.js + design system | ✅ Concluída |
+| 🧩 Telas (Fornecedor, Produto, Associação) | 🚧 Scaffold pronto (refinamento na Etapa 8) |
 
 > O histórico detalhado e datado de cada etapa é mantido em
 > [docs/00-visao-geral.md](docs/00-visao-geral.md).
