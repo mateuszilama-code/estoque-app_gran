@@ -49,10 +49,13 @@ O projeto adota uma organização de **monorepo**, separando backend e frontend 
 ```
 estoque-app/
 ├── apps/
-│   ├── api/                # Backend NestJS + Sequelize + SQLite (API REST + Swagger)
-│   └── web/                # Frontend Next.js (App Router)
+│   ├── api/                # Backend NestJS + Sequelize + SQLite (API REST + Swagger) — scaffold na Etapa 2
+│   │   └── .gitkeep
+│   └── web/                # Frontend Next.js (App Router) — scaffold na Etapa 7
+│       └── .gitkeep
 ├── packages/
 │   └── shared-types/       # (futuro) Tipos/DTOs compartilhados entre api e web
+│       └── .gitkeep
 ├── docs/
 │   ├── 00-visao-geral.md   # Documento mestre de acompanhamento (histórico de etapas)
 │   ├── sdd.html            # Software Design Document (arquitetura, modelo, decisões)
@@ -61,9 +64,9 @@ estoque-app/
 └── README.md
 ```
 
-> A árvore acima é o **estado-alvo** do monorepo. As pastas `apps/`, `packages/` e os módulos
-> internos serão criados nas próximas etapas — esta seção será atualizada com a árvore real a
-> cada avanço.
+> **Estrutura criada na Etapa 1.** As pastas `apps/api`, `apps/web` e `packages/shared-types` estão
+> vazias (com um marcador `.gitkeep` cada, já que o Git não versiona pastas vazias) e serão
+> preenchidas pelos scaffolds do backend e do frontend nas próximas etapas.
 
 ---
 
@@ -106,12 +109,12 @@ cd estoque-app
 
 ## Status do Projeto
 
-**Etapa atual:** `Etapa 0 — Estrutura inicial de documentação` ✅
+**Etapa atual:** `Etapa 1 — Estrutura do monorepo` ✅
 
 | Área | Situação |
 | ---- | -------- |
 | 📚 Documentação base (README, SDD, visão geral) | ✅ Concluída |
-| 🗂️ Estrutura do monorepo (`apps/`, `packages/`) | ⏳ Pendente |
+| 🗂️ Estrutura do monorepo (`apps/`, `packages/`) | ✅ Concluída |
 | ⚙️ Backend — scaffold NestJS + Sequelize + Swagger | ⏳ Pendente |
 | 🗃️ Migrations e seeders (SQLite) | ⏳ Pendente |
 | 🏢 Módulo Fornecedor (CRUD + validações) | ⏳ Pendente |

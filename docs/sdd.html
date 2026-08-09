@@ -144,9 +144,9 @@
     <p class="subtitle">Sistema de Controle de Estoque — Projeto Integrador Full Stack (Fase 2)</p>
     <div class="meta-grid">
       <div><span>Projeto</span><strong>Controle de Estoque</strong></div>
-      <div><span>Versão do SDD</span><strong>0.1 (inicial)</strong></div>
+      <div><span>Versão do SDD</span><strong>0.2</strong></div>
       <div><span>Última atualização</span><strong>2026-08-08</strong></div>
-      <div><span>Etapa</span><strong>0 — Documentação base</strong></div>
+      <div><span>Etapa</span><strong>1 — Estrutura do monorepo</strong></div>
     </div>
   </header>
 
@@ -307,10 +307,39 @@
         backend e frontend em etapas futuras.</li>
     </ul>
 
+    <h3>3.2 Estrutura de pastas do monorepo <span class="badge done">Etapa 1</span></h3>
+    <p>
+      O esqueleto do monorepo foi criado na Etapa 1. As pastas de aplicação estão vazias (com um
+      marcador <code>.gitkeep</code> cada, pois o Git não versiona pastas vazias) e serão preenchidas
+      pelos scaffolds das próximas etapas.
+    </p>
+    <pre><code>estoque-app/
+├── apps/
+│   ├── api/                    # (vazio) backend NestJS — scaffold na Etapa 2
+│   │   └── .gitkeep
+│   └── web/                    # (vazio) frontend Next.js — scaffold na Etapa 7
+│       └── .gitkeep
+├── packages/
+│   └── shared-types/           # (vazio) tipos/DTOs compartilhados (futuro)
+│       └── .gitkeep
+├── docs/
+│   ├── 00-visao-geral.md       # documento mestre (histórico de etapas)
+│   └── sdd.html                # este documento
+├── .gitignore
+└── README.md</code></pre>
+    <p>
+      <strong>Versionamento:</strong> apenas a documentação viva (<code>README.md</code>,
+      <code>docs/00-visao-geral.md</code>, <code>docs/sdd.html</code>) e a estrutura de pastas são
+      commitadas. Os registros de etapa <code>docs/NN-*.md</code> ficam fora do Git (regra no
+      <code>.gitignore</code>). O padrão de mensagens de commit é
+      <strong>Conventional Commits</strong> (<code>feat</code>, <code>fix</code>, <code>chore</code>,
+      <code>docs</code>).
+    </p>
+
     <div class="callout">
-      O diagrama e a estrutura acima representam o <strong>estado-alvo</strong>. Detalhes concretos
-      (árvore real de pastas, configuração do Swagger, caminho do arquivo SQLite) serão adicionados a
-      esta seção conforme as etapas de scaffold forem concluídas.
+      A estrutura de pastas acima é a <strong>real</strong> (Etapa 1). Detalhes internos de cada app
+      (configuração do Swagger, caminho do arquivo SQLite, organização <em>feature-first</em> dos
+      módulos) serão adicionados a esta seção conforme os scaffolds forem concluídos.
     </div>
   </section>
 
@@ -445,6 +474,14 @@
           <td>Criação inicial do SDD: introdução, escopo funcional das 3 features, arquitetura geral
             (monorepo, REST, SQLite, Next.js), modelo de domínio (Fornecedor, Produto,
             ProdutoFornecedor) e decisões técnicas.</td>
+        </tr>
+        <tr>
+          <td>2026-08-08</td>
+          <td>1 — Estrutura do monorepo</td>
+          <td>0.2</td>
+          <td>Seção 3 (Arquitetura Geral) atualizada com a estrutura real de pastas do monorepo
+            (<code>apps/api</code>, <code>apps/web</code>, <code>packages/shared-types</code>) e com a
+            regra de versionamento e convenção de commits.</td>
         </tr>
       </tbody>
     </table>

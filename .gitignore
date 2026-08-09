@@ -65,6 +65,14 @@ coverage/
 .nyc_output/
 
 # ─────────────────────────────────────────────
+# Documentação de etapas (docs/NN-*.md): registro local detalhado de cada
+# etapa — NÃO versionado. Apenas a documentação viva (README.md,
+# docs/00-visao-geral.md, docs/sdd.html) é enviada ao Git.
+# ─────────────────────────────────────────────
+docs/[0-9][0-9]-*.md
+!docs/00-visao-geral.md
+
+# ─────────────────────────────────────────────
 # Material de apoio e arquivos de trabalho (não versionar)
 #  - PDF da apostila: conteúdo licenciado, reprodução vedada
 #  - roteiro de prompts: arquivo de trabalho interno, não é documentação viva
