@@ -92,16 +92,20 @@ npm run db:seed:all          # insere 2 fornecedores e 3 produtos de exemplo
 
 # 4. Subir a API
 npm run start                # ou: npm run start:dev (modo watch)
+
+# 5. (opcional) rodar os testes unitários
+npm test                     # Jest + @swc/jest
 ```
 
 Com a API no ar:
-- **Swagger UI:** <http://localhost:3000/docs>
+- **Swagger UI:** <http://localhost:3000/docs> — inclui o CRUD de **Fornecedor** (tag `fornecedores`).
 - **OpenAPI JSON:** <http://localhost:3000/docs-json>
 
 > **Rollback do banco:** `npm run db:migrate:undo` (última migration) · `npm run db:migrate:undo:all`
 > (todas) · `npm run db:seed:undo:all` (dados do seeder).
 >
-> Os endpoints de negócio entram nas **Etapas 4 a 6**.
+> **Endpoints de Fornecedor** (Etapa 4): `POST`/`GET /fornecedores` e
+> `GET`/`PATCH`/`DELETE /fornecedores/:id`. Produto e Associação entram nas **Etapas 5 e 6**.
 
 ### Frontend (`apps/web`)
 
@@ -115,13 +119,13 @@ Com a API no ar:
 | --------- | --------- |
 | [docs/00-visao-geral.md](docs/00-visao-geral.md) | Documento mestre de acompanhamento: objetivo, stack e **histórico de todas as etapas**. |
 | [docs/sdd.html](docs/sdd.html) | **Software Design Document**: introdução, escopo funcional, arquitetura, modelo de domínio, decisões técnicas e histórico de revisões. |
-| **Swagger UI** → `http://localhost:3000/docs` | Documentação **viva** da API REST (OpenAPI), disponível após subir o backend. Ainda não ativa nesta etapa. |
+| **Swagger UI** → `http://localhost:3000/docs` | Documentação **viva** da API REST (OpenAPI), disponível após subir o backend. Já expõe o CRUD de Fornecedor (tag `fornecedores`). |
 
 ---
 
 ## Status do Projeto
 
-**Etapa atual:** `Etapa 3 — Migrations e seeders (SQLite)` ✅
+**Etapa atual:** `Etapa 4 — Módulo Fornecedor (CRUD + Swagger)` ✅
 
 | Área | Situação |
 | ---- | -------- |
@@ -129,7 +133,7 @@ Com a API no ar:
 | 🗂️ Estrutura do monorepo (`apps/`, `packages/`) | ✅ Concluída |
 | ⚙️ Backend — scaffold NestJS + Sequelize + Swagger | ✅ Concluída |
 | 🗃️ Migrations e seeders (SQLite) | ✅ Concluída |
-| 🏢 Módulo Fornecedor (CRUD + validações) | ⏳ Pendente |
+| 🏢 Módulo Fornecedor (CRUD + validações) | ✅ Concluída |
 | 📦 Módulo Produto (CRUD + validações) | ⏳ Pendente |
 | 🔗 Módulo Associação Produto/Fornecedor (N:N) | ⏳ Pendente |
 | 🖥️ Frontend — scaffold Next.js + design system | ⏳ Pendente |

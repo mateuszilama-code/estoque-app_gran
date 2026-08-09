@@ -144,9 +144,9 @@
     <p class="subtitle">Sistema de Controle de Estoque — Projeto Integrador Full Stack (Fase 2)</p>
     <div class="meta-grid">
       <div><span>Projeto</span><strong>Controle de Estoque</strong></div>
-      <div><span>Versão do SDD</span><strong>0.4</strong></div>
+      <div><span>Versão do SDD</span><strong>0.5</strong></div>
       <div><span>Última atualização</span><strong>2026-08-09</strong></div>
-      <div><span>Etapa</span><strong>3 — Migrations e seeders</strong></div>
+      <div><span>Etapa</span><strong>4 — Módulo de Fornecedor</strong></div>
     </div>
   </header>
 
@@ -200,20 +200,26 @@
       erro cujas mensagens ao usuário devem ser reproduzidas fielmente pela aplicação.
     </p>
 
-    <h3>2.1 Fornecedor <span class="badge pending">a implementar</span></h3>
+    <h3>2.1 Fornecedor <span class="badge done">implementado</span></h3>
     <p><em>Como gerente de compras, quero cadastrar fornecedores para gerenciar e rastrear as
       informações relevantes sobre os fornecedores com quem faço negócios.</em></p>
     <p><strong>Campos:</strong> nome da empresa, CNPJ, endereço, telefone, e-mail e contato principal
       (todos obrigatórios). O CNPJ é <strong>único</strong> no sistema.</p>
     <h4>Cenários</h4>
     <ul>
-      <li><strong>Sucesso:</strong> dados válidos e CNPJ inédito → cadastra e exibe
-        <span class="msg">"Fornecedor cadastrado com sucesso!"</span></li>
-      <li><strong>CNPJ duplicado:</strong> já existe fornecedor com o mesmo CNPJ → bloqueia e exibe
+      <li><strong>Sucesso:</strong> dados válidos e CNPJ inédito → cadastra (<code>201</code>) e o
+        frontend exibe <span class="msg">"Fornecedor cadastrado com sucesso!"</span></li>
+      <li><strong>CNPJ duplicado:</strong> já existe fornecedor com o mesmo CNPJ → bloqueia
+        (<code>409</code>) e exibe
         <span class="msg">"Fornecedor com esse CNPJ já está cadastrado!"</span></li>
       <li><strong>Dados inválidos:</strong> campos obrigatórios em branco ou formato inválido →
-        bloqueia e exibe mensagens de erro <strong>ao lado de cada campo</strong>.</li>
+        bloqueia (<code>400</code>) e exibe mensagens de erro <strong>ao lado de cada campo</strong>.</li>
     </ul>
+    <p class="callout"><strong>Implementado na Etapa 4.</strong> CRUD completo em <code>apps/api</code>
+      (entity, DTOs com validação, service com a regra de CNPJ único e controller REST), com testes
+      unitários. Endpoints documentados e testáveis na <strong>Swagger UI</strong> sob a tag
+      <strong><code>fornecedores</code></strong> (<code>http://localhost:3000/docs</code>):
+      <code>POST/GET /fornecedores</code> e <code>GET/PATCH/DELETE /fornecedores/{id}</code>.</p>
 
     <h3>2.2 Produto <span class="badge pending">a implementar</span></h3>
     <p><em>Como gerente de estoque, quero cadastrar produtos para gerenciar e rastrear as informações
@@ -531,6 +537,14 @@
           <td>Seção 4 (Modelo de Domínio) consolidada: schema das 3 tabelas implementado via
             migrations (sequelize-cli), com as constraints de unicidade (cnpj, codigo_barras,
             <code>uq_produto_fornecedor</code>) e FKs em CASCADE; seeder de exemplo.</td>
+        </tr>
+        <tr>
+          <td>2026-08-09</td>
+          <td>4 — Módulo de Fornecedor</td>
+          <td>0.5</td>
+          <td>Seção 2.1 (Fornecedor) marcada como <span class="badge done">implementado</span>: CRUD
+            completo no backend (entity, DTOs validados, service com regra de CNPJ único, controller
+            REST) e testes unitários, documentado na Swagger UI sob a tag <code>fornecedores</code>.</td>
         </tr>
       </tbody>
     </table>
