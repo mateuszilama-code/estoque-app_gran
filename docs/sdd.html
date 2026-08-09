@@ -144,9 +144,9 @@
     <p class="subtitle">Sistema de Controle de Estoque — Projeto Integrador Full Stack (Fase 2)</p>
     <div class="meta-grid">
       <div><span>Projeto</span><strong>Controle de Estoque</strong></div>
-      <div><span>Versão do SDD</span><strong>0.2</strong></div>
+      <div><span>Versão do SDD</span><strong>0.3</strong></div>
       <div><span>Última atualização</span><strong>2026-08-08</strong></div>
-      <div><span>Etapa</span><strong>1 — Estrutura do monorepo</strong></div>
+      <div><span>Etapa</span><strong>2 — Scaffold do backend</strong></div>
     </div>
   </header>
 
@@ -307,16 +307,19 @@
         backend e frontend em etapas futuras.</li>
     </ul>
 
-    <h3>3.2 Estrutura de pastas do monorepo <span class="badge done">Etapa 1</span></h3>
+    <h3>3.2 Estrutura de pastas do monorepo <span class="badge done">Etapa 1–2</span></h3>
     <p>
-      O esqueleto do monorepo foi criado na Etapa 1. As pastas de aplicação estão vazias (com um
-      marcador <code>.gitkeep</code> cada, pois o Git não versiona pastas vazias) e serão preenchidas
-      pelos scaffolds das próximas etapas.
+      O esqueleto do monorepo foi criado na Etapa 1 e o backend foi scaffoldado na Etapa 2
+      (<code>apps/api</code>). O frontend (<code>apps/web</code>) e o pacote de tipos
+      (<code>packages/shared-types</code>) seguem vazios (com <code>.gitkeep</code>) até serem
+      preenchidos nas próximas etapas.
     </p>
     <pre><code>estoque-app/
 ├── apps/
-│   ├── api/                    # (vazio) backend NestJS — scaffold na Etapa 2
-│   │   └── .gitkeep
+│   ├── api/                    # backend NestJS + Sequelize + SQLite + Swagger (Etapa 2)
+│   │   ├── src/                #   main.ts, app.module.ts, config/, common/, &lt;features&gt;/
+│   │   ├── database/           #   estoque.sqlite (gerado em runtime, ignorado)
+│   │   └── package.json …
 │   └── web/                    # (vazio) frontend Next.js — scaffold na Etapa 7
 │       └── .gitkeep
 ├── packages/
@@ -327,6 +330,29 @@
 │   └── sdd.html                # este documento
 ├── .gitignore
 └── README.md</code></pre>
+    <p>
+      Internamente, <code>apps/api/src</code> segue a organização <strong>feature-first</strong>: um
+      diretório por domínio (<code>fornecedores/</code>, <code>produtos/</code>,
+      <code>produto-fornecedor/</code>), cada um com <em>module</em>, <em>controller</em>,
+      <em>service</em> e as pastas <em>dto</em>/<em>entities</em>; mais <code>config/</code>
+      (conexão do Sequelize) e <code>common/</code> (recursos transversais).
+    </p>
+
+    <h3>3.3 Documentação viva da API — Swagger UI <span class="badge done">Etapa 2</span></h3>
+    <p>
+      A API expõe sua documentação OpenAPI de forma <strong>viva</strong>, gerada a partir do próprio
+      código por <code>@nestjs/swagger</code>:
+    </p>
+    <ul>
+      <li><strong>Swagger UI:</strong> <code>http://localhost:3000/docs</code> — interface navegável,
+        <strong>fonte oficial</strong> do contrato dos endpoints da API.</li>
+      <li><strong>OpenAPI JSON:</strong> <code>http://localhost:3000/docs-json</code>.</li>
+    </ul>
+    <p>
+      O documento já declara as tags por domínio (<code>fornecedores</code>, <code>produtos</code>,
+      <code>associacao</code>); os endpoints serão preenchidos sob cada tag conforme os módulos forem
+      implementados (Etapas 4 a 6).
+    </p>
     <p>
       <strong>Versionamento:</strong> apenas a documentação viva (<code>README.md</code>,
       <code>docs/00-visao-geral.md</code>, <code>docs/sdd.html</code>) e a estrutura de pastas são
@@ -482,6 +508,14 @@
           <td>Seção 3 (Arquitetura Geral) atualizada com a estrutura real de pastas do monorepo
             (<code>apps/api</code>, <code>apps/web</code>, <code>packages/shared-types</code>) e com a
             regra de versionamento e convenção de commits.</td>
+        </tr>
+        <tr>
+          <td>2026-08-08</td>
+          <td>2 — Scaffold do backend</td>
+          <td>0.3</td>
+          <td>Seção 3 (Arquitetura Geral) atualizada: <code>apps/api</code> scaffoldado (NestJS +
+            Sequelize/SQLite), organização feature-first do <code>src</code> e a Swagger UI
+            (<code>/docs</code> e <code>/docs-json</code>) como fonte viva da documentação da API.</td>
         </tr>
       </tbody>
     </table>

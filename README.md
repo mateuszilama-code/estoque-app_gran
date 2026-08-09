@@ -72,28 +72,34 @@ estoque-app/
 
 ## Como Rodar Localmente
 
-> ⚠️ **Placeholder.** O código-fonte (backend e frontend) ainda não foi criado nesta etapa.
-> Esta seção será preenchida com os comandos reais de instalação, migração, seed e execução à
-> medida que cada parte do sistema for implementada. Roteiro previsto:
+**Pré-requisitos:** Node.js 20+ (validado no Node 24), npm e Git instalados.
+
+### Backend (`apps/api`)
 
 ```bash
-# 1. Clonar o repositório
-git clone <url-do-repositorio>
-cd estoque-app
+# a partir da raiz do repositório
+cd apps/api
 
-# 2. Backend (apps/api)  — a detalhar
-#    - instalar dependências
-#    - configurar .env a partir de .env.example
-#    - rodar migrations e seeders (sequelize-cli)
-#    - subir a API (Swagger UI em http://localhost:3000/docs)
+# 1. Instalar dependências
+npm install
 
-# 3. Frontend (apps/web) — a detalhar
-#    - instalar dependências
-#    - configurar NEXT_PUBLIC_API_URL
-#    - subir o servidor de desenvolvimento
+# 2. (opcional) configurar variáveis de ambiente
+cp .env.example .env         # ajuste PORT / DB_STORAGE se necessário
+
+# 3. Subir a API
+npm run start                # ou: npm run start:dev (modo watch)
 ```
 
-**Pré-requisitos previstos:** Node.js LTS, npm e Git instalados.
+Com a API no ar:
+- **Swagger UI:** <http://localhost:3000/docs>
+- **OpenAPI JSON:** <http://localhost:3000/docs-json>
+
+> As migrations e seeders do banco (sequelize-cli) entram na **Etapa 3**; os endpoints de negócio,
+> nas **Etapas 4 a 6**.
+
+### Frontend (`apps/web`)
+
+> ⏳ A detalhar — o scaffold do Next.js será feito na **Etapa 7**.
 
 ---
 
@@ -109,13 +115,13 @@ cd estoque-app
 
 ## Status do Projeto
 
-**Etapa atual:** `Etapa 1 — Estrutura do monorepo` ✅
+**Etapa atual:** `Etapa 2 — Scaffold do backend (NestJS + Sequelize + Swagger)` ✅
 
 | Área | Situação |
 | ---- | -------- |
 | 📚 Documentação base (README, SDD, visão geral) | ✅ Concluída |
 | 🗂️ Estrutura do monorepo (`apps/`, `packages/`) | ✅ Concluída |
-| ⚙️ Backend — scaffold NestJS + Sequelize + Swagger | ⏳ Pendente |
+| ⚙️ Backend — scaffold NestJS + Sequelize + Swagger | ✅ Concluída |
 | 🗃️ Migrations e seeders (SQLite) | ⏳ Pendente |
 | 🏢 Módulo Fornecedor (CRUD + validações) | ⏳ Pendente |
 | 📦 Módulo Produto (CRUD + validações) | ⏳ Pendente |

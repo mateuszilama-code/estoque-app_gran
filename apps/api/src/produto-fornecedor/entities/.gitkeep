@@ -1,0 +1,1 @@
+# Entity/Model ProdutoFornecedor (tabela de junção, unique(produto_id, fornecedor_id)) — Etapa 6.

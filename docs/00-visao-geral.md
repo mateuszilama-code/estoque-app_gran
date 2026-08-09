@@ -66,7 +66,7 @@ detalhamento e um commit no padrão *Conventional Commits*.
 | :---: | :--: | ------ | ------------ | ------ |
 | **0** | 2026-08-08 | Estrutura inicial de documentação: `README.md`, `docs/sdd.html`, `docs/00-visao-geral.md` e `.gitignore`; inicialização do Git. | — (base de documentação) | `docs: estrutura inicial de documentacao (readme, sdd, visao geral)` |
 | **1** | 2026-08-08 | Estrutura de monorepo criada: `apps/api`, `apps/web` e `packages/shared-types` (vazias, com `.gitkeep`); convenção de commits documentada. | `docs/01-estrutura-monorepo.md` | `chore: estrutura inicial do monorepo (apps/api, apps/web)` |
-| 2 | — | Scaffold do backend NestJS + Sequelize + SQLite + Swagger. | `docs/02-scaffold-backend.md` | *pendente* |
+| **2** | 2026-08-08 | Scaffold do backend em `apps/api`: NestJS 11 + Sequelize/SQLite + Swagger (UI em `/docs`, JSON em `/docs-json`); estrutura feature-first (fornecedores, produtos, produto-fornecedor). Servidor sobe e Swagger carrega. | `docs/02-scaffold-backend.md` | `chore(api): scaffold NestJS com Sequelize e Swagger configurados` |
 | 3 | — | Migrations e seeders com sequelize-cli. | `docs/03-migrations-sequelize.md` | *pendente* |
 | 4 | — | Módulo e endpoints de Fornecedor (CRUD + Swagger). | `docs/04-modulo-fornecedor.md` | *pendente* |
 | 5 | — | Módulo e endpoints de Produto (CRUD + Swagger). | `docs/05-modulo-produto.md` | *pendente* |
@@ -79,8 +79,8 @@ detalhamento e um commit no padrão *Conventional Commits*.
 
 ## 4. Próximos Passos
 
-- **Etapa 2:** scaffold do backend em `apps/api` — inicializar NestJS, configurar Sequelize + SQLite
-  + `@nestjs/swagger` e expor a Swagger UI em `/docs`.
+- **Etapa 3:** migrations e seeders com `sequelize-cli` — criar as tabelas `fornecedores`,
+  `produtos` e `produto_fornecedores` (com constraints de unicidade) e um seeder de exemplo.
 
 > Este documento deve ser atualizado ao final de cada etapa: nova linha no *Histórico de Etapas*
 > (com data, resumo, `.md` e commit) e ajuste dos *Próximos Passos*.

@@ -1,0 +1,2 @@
+# Placeholder para versionar a pasta que guardará o arquivo SQLite.
+# O arquivo estoque.sqlite (gerado em runtime) é ignorado pelo Git (*.sqlite).
