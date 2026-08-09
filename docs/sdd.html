@@ -144,9 +144,9 @@
     <p class="subtitle">Sistema de Controle de Estoque — Projeto Integrador Full Stack (Fase 2)</p>
     <div class="meta-grid">
       <div><span>Projeto</span><strong>Controle de Estoque</strong></div>
-      <div><span>Versão do SDD</span><strong>0.3</strong></div>
-      <div><span>Última atualização</span><strong>2026-08-08</strong></div>
-      <div><span>Etapa</span><strong>2 — Scaffold do backend</strong></div>
+      <div><span>Versão do SDD</span><strong>0.4</strong></div>
+      <div><span>Última atualização</span><strong>2026-08-09</strong></div>
+      <div><span>Etapa</span><strong>3 — Migrations e seeders</strong></div>
     </div>
   </header>
 
@@ -425,13 +425,20 @@
         <tr><td><code>created_at</code> / <code>updated_at</code></td><td>DATE</td><td>sim</td><td>Timestamps automáticos</td></tr>
       </tbody>
     </table>
-    <p><strong>Restrição de unicidade:</strong> índice único composto em
-      <code>(produto_id, fornecedor_id)</code> — impede associar o mesmo fornecedor ao mesmo produto
-      mais de uma vez (base do cenário <span class="msg">"Fornecedor já está associado a este produto!"</span>).</p>
+    <p><strong>Restrição de unicidade:</strong> índice único composto
+      <code>uq_produto_fornecedor</code> em <code>(produto_id, fornecedor_id)</code> — impede associar
+      o mesmo fornecedor ao mesmo produto mais de uma vez (base do cenário
+      <span class="msg">"Fornecedor já está associado a este produto!"</span>). As FKs
+      <code>produto_id</code>/<code>fornecedor_id</code> usam <code>ON DELETE/UPDATE CASCADE</code>.</p>
 
     <div class="callout">
-      Os tipos acima refletem a intenção de projeto. O schema definitivo (tipos de coluna exatos e
-      constraints) será consolidado nesta seção na etapa de <em>migrations</em> (sequelize-cli).
+      <strong>Schema implementado <span class="badge done">Etapa 3</span>.</strong> As três tabelas
+      foram criadas por <em>migrations</em> (sequelize-cli) no SQLite, com as constraints acima
+      (UNIQUE de <code>cnpj</code>, UNIQUE de <code>codigo_barras</code> permitindo múltiplos NULL, e
+      o índice único <code>uq_produto_fornecedor</code>). Um <em>seeder</em> popula 2 fornecedores e
+      3 produtos de exemplo. Colunas em <code>snake_case</code> (inclusive
+      <code>created_at</code>/<code>updated_at</code>) — os models <code>sequelize-typescript</code>
+      das próximas etapas usarão <code>underscored: true</code>.
     </div>
   </section>
 
@@ -516,6 +523,14 @@
           <td>Seção 3 (Arquitetura Geral) atualizada: <code>apps/api</code> scaffoldado (NestJS +
             Sequelize/SQLite), organização feature-first do <code>src</code> e a Swagger UI
             (<code>/docs</code> e <code>/docs-json</code>) como fonte viva da documentação da API.</td>
+        </tr>
+        <tr>
+          <td>2026-08-09</td>
+          <td>3 — Migrations e seeders</td>
+          <td>0.4</td>
+          <td>Seção 4 (Modelo de Domínio) consolidada: schema das 3 tabelas implementado via
+            migrations (sequelize-cli), com as constraints de unicidade (cnpj, codigo_barras,
+            <code>uq_produto_fornecedor</code>) e FKs em CASCADE; seeder de exemplo.</td>
         </tr>
       </tbody>
     </table>

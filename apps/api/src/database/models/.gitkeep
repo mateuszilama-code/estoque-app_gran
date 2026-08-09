@@ -1,0 +1,4 @@
+# Caminho de models do sequelize-cli (exigido pelo .sequelizerc).
+# Os models de domínio do projeto NÃO ficam aqui: seguem o padrão feature-first
+# (ex.: src/fornecedores/entities/) usando sequelize-typescript, registrados via
+# SequelizeModule.forFeature. Esta pasta existe apenas para o CLI.

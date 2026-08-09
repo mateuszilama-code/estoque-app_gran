@@ -1,0 +1,13 @@
+const path = require('path');
+
+/**
+ * Adapta o sequelize-cli à estrutura do projeto: config, migrations, seeders e
+ * models ficam dentro de `src/database/`. Os caminhos são resolvidos a partir da
+ * raiz de `apps/api` (cwd ao rodar os comandos do CLI).
+ */
+module.exports = {
+  config: path.resolve('src', 'database', 'config', 'config.js'),
+  'migrations-path': path.resolve('src', 'database', 'migrations'),
+  'seeders-path': path.resolve('src', 'database', 'seeders'),
+  'models-path': path.resolve('src', 'database', 'models'),
+};

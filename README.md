@@ -86,7 +86,11 @@ npm install
 # 2. (opcional) configurar variáveis de ambiente
 cp .env.example .env         # ajuste PORT / DB_STORAGE se necessário
 
-# 3. Subir a API
+# 3. Criar o schema do banco (SQLite) e popular dados de exemplo
+npm run db:migrate           # cria as tabelas (fornecedores, produtos, produto_fornecedores)
+npm run db:seed:all          # insere 2 fornecedores e 3 produtos de exemplo
+
+# 4. Subir a API
 npm run start                # ou: npm run start:dev (modo watch)
 ```
 
@@ -94,8 +98,10 @@ Com a API no ar:
 - **Swagger UI:** <http://localhost:3000/docs>
 - **OpenAPI JSON:** <http://localhost:3000/docs-json>
 
-> As migrations e seeders do banco (sequelize-cli) entram na **Etapa 3**; os endpoints de negócio,
-> nas **Etapas 4 a 6**.
+> **Rollback do banco:** `npm run db:migrate:undo` (última migration) · `npm run db:migrate:undo:all`
+> (todas) · `npm run db:seed:undo:all` (dados do seeder).
+>
+> Os endpoints de negócio entram nas **Etapas 4 a 6**.
 
 ### Frontend (`apps/web`)
 
@@ -115,14 +121,14 @@ Com a API no ar:
 
 ## Status do Projeto
 
-**Etapa atual:** `Etapa 2 — Scaffold do backend (NestJS + Sequelize + Swagger)` ✅
+**Etapa atual:** `Etapa 3 — Migrations e seeders (SQLite)` ✅
 
 | Área | Situação |
 | ---- | -------- |
 | 📚 Documentação base (README, SDD, visão geral) | ✅ Concluída |
 | 🗂️ Estrutura do monorepo (`apps/`, `packages/`) | ✅ Concluída |
 | ⚙️ Backend — scaffold NestJS + Sequelize + Swagger | ✅ Concluída |
-| 🗃️ Migrations e seeders (SQLite) | ⏳ Pendente |
+| 🗃️ Migrations e seeders (SQLite) | ✅ Concluída |
 | 🏢 Módulo Fornecedor (CRUD + validações) | ⏳ Pendente |
 | 📦 Módulo Produto (CRUD + validações) | ⏳ Pendente |
 | 🔗 Módulo Associação Produto/Fornecedor (N:N) | ⏳ Pendente |

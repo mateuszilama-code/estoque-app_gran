@@ -9,7 +9,13 @@
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/main.js"
+    "start:prod": "node dist/main.js",
+    "db:migrate": "sequelize-cli db:migrate",
+    "db:migrate:undo": "sequelize-cli db:migrate:undo",
+    "db:migrate:undo:all": "sequelize-cli db:migrate:undo:all",
+    "db:migrate:status": "sequelize-cli db:migrate:status",
+    "db:seed:all": "sequelize-cli db:seed:all",
+    "db:seed:undo:all": "sequelize-cli db:seed:undo:all"
   },
   "dependencies": {
     "@nestjs/common": "^11.1.28",
@@ -31,6 +37,8 @@
     "@nestjs/cli": "^11.0.24",
     "@nestjs/schematics": "^11.1.0",
     "@types/node": "^26.2.0",
+    "dotenv": "^17.4.2",
+    "sequelize-cli": "^6.6.5",
     "ts-loader": "^9.6.2",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
