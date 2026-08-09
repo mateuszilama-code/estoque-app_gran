@@ -7,6 +7,14 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  // CORS — permite que o frontend (apps/web, porta 3001 por padrão) consuma a API
+  // pelo navegador. Origem configurável por CORS_ORIGIN (lista separada por vírgula);
+  // por padrão libera todas as origens, adequado ao contexto local/MVP.
+  const corsOrigin = process.env.CORS_ORIGIN;
+  app.enableCors({
+    origin: corsOrigin ? corsOrigin.split(',').map((o) => o.trim()) : true,
+  });
+
   // Validação global dos DTOs (usada pelos módulos de domínio nas próximas etapas).
   app.useGlobalPipes(
     new ValidationPipe({
