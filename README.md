@@ -98,14 +98,16 @@ npm test                     # Jest + @swc/jest
 ```
 
 Com a API no ar:
-- **Swagger UI:** <http://localhost:3000/docs> — inclui o CRUD de **Fornecedor** (tag `fornecedores`).
+- **Swagger UI:** <http://localhost:3000/docs> — inclui o CRUD de **Fornecedor** (tag `fornecedores`)
+  e de **Produto** (tag `produtos`).
 - **OpenAPI JSON:** <http://localhost:3000/docs-json>
 
 > **Rollback do banco:** `npm run db:migrate:undo` (última migration) · `npm run db:migrate:undo:all`
 > (todas) · `npm run db:seed:undo:all` (dados do seeder).
 >
-> **Endpoints de Fornecedor** (Etapa 4): `POST`/`GET /fornecedores` e
-> `GET`/`PATCH`/`DELETE /fornecedores/:id`. Produto e Associação entram nas **Etapas 5 e 6**.
+> **Endpoints já disponíveis:** `POST`/`GET /fornecedores` e `GET`/`PATCH`/`DELETE /fornecedores/:id`
+> (Etapa 4); `POST`/`GET /produtos` e `GET`/`PATCH`/`DELETE /produtos/:id` (Etapa 5). A Associação
+> Produto/Fornecedor entra na **Etapa 6**.
 
 ### Frontend (`apps/web`)
 
@@ -125,7 +127,7 @@ Com a API no ar:
 
 ## Status do Projeto
 
-**Etapa atual:** `Etapa 4 — Módulo Fornecedor (CRUD + Swagger)` ✅
+**Etapa atual:** `Etapa 5 — Módulo Produto (CRUD + Swagger)` ✅
 
 | Área | Situação |
 | ---- | -------- |
@@ -134,7 +136,7 @@ Com a API no ar:
 | ⚙️ Backend — scaffold NestJS + Sequelize + Swagger | ✅ Concluída |
 | 🗃️ Migrations e seeders (SQLite) | ✅ Concluída |
 | 🏢 Módulo Fornecedor (CRUD + validações) | ✅ Concluída |
-| 📦 Módulo Produto (CRUD + validações) | ⏳ Pendente |
+| 📦 Módulo Produto (CRUD + validações) | ✅ Concluída |
 | 🔗 Módulo Associação Produto/Fornecedor (N:N) | ⏳ Pendente |
 | 🖥️ Frontend — scaffold Next.js + design system | ⏳ Pendente |
 | 🧩 Telas (Fornecedor, Produto, Associação) | ⏳ Pendente |

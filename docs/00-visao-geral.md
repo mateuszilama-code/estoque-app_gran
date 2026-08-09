@@ -69,7 +69,7 @@ detalhamento e um commit no padrão *Conventional Commits*.
 | **2** | 2026-08-08 | Scaffold do backend em `apps/api`: NestJS 11 + Sequelize/SQLite + Swagger (UI em `/docs`, JSON em `/docs-json`); estrutura feature-first (fornecedores, produtos, produto-fornecedor). Servidor sobe e Swagger carrega. | `docs/02-scaffold-backend.md` | `chore(api): scaffold NestJS com Sequelize e Swagger configurados` |
 | **3** | 2026-08-09 | Schema versionado com sequelize-cli: migrations de `fornecedores`, `produtos` e `produto_fornecedores` (com UNIQUE de cnpj, codigo_barras e do par produto/fornecedor) + seeder (2 fornecedores, 3 produtos). Migrations e constraint de unicidade validadas no SQLite. | `docs/03-migrations-sequelize.md` | `feat(db): migrations e seeders iniciais de fornecedor, produto e associacao` |
 | **4** | 2026-08-09 | Módulo de Fornecedor completo em `apps/api`: entity, DTOs validados (`class-validator` + `@ApiProperty`), service com regra de **CNPJ único** e CRUD REST documentado na Swagger UI (tag `fornecedores`). Toolchain de testes (Jest + @swc/jest): 16 testes verdes. CRUD validado por `curl` (201/409/400/404/204). | `docs/04-modulo-fornecedor.md` | `feat(api): CRUD de fornecedor com validacoes e documentacao swagger` |
-| 5 | — | Módulo e endpoints de Produto (CRUD + Swagger). | `docs/05-modulo-produto.md` | *pendente* |
+| **5** | 2026-08-09 | Módulo de Produto completo em `apps/api`: entity, DTOs validados (`categoria` como enum *Eletrônicos/Alimentos/Vestuário/Outro*), service com regra de **código de barras único** (quando informado) e CRUD REST documentado na Swagger UI (tag `produtos`). Testes: 34 verdes no total. CRUD validado por `curl` (201/409/400/404/204). | `docs/05-modulo-produto.md` | `feat(api): CRUD de produto com validacoes e documentacao swagger` |
 | 6 | — | Módulo de Associação Produto/Fornecedor (N:N). | `docs/06-modulo-associacao.md` | *pendente* |
 | 7 | — | Scaffold do frontend Next.js + design system. | `docs/07-scaffold-frontend.md` | *pendente* |
 | 8 | — | Telas de Fornecedor, Produto e Associação. | `docs/08-telas-frontend.md` | *pendente* |
@@ -79,8 +79,9 @@ detalhamento e um commit no padrão *Conventional Commits*.
 
 ## 4. Próximos Passos
 
-- **Etapa 5:** módulo de Produto — entity (sequelize-typescript), DTOs com validação e
-  `@ApiProperty`, service com regra de **código de barras único** e CRUD documentado na Swagger UI.
+- **Etapa 6:** módulo de Associação Produto/Fornecedor (N:N) — endpoints para associar/desassociar
+  fornecedores a um produto, com a regra de associação única (`uq_produto_fornecedor`) e as mensagens
+  do desafio, documentado na Swagger UI (tag `associacao`).
 
 > Este documento deve ser atualizado ao final de cada etapa: nova linha no *Histórico de Etapas*
 > (com data, resumo, `.md` e commit) e ajuste dos *Próximos Passos*.
