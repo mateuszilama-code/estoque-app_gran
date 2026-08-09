@@ -1,3 +1,10 @@
+/**
+ * Componentes da primeira versão do frontend (CSS puro, sem Tailwind).
+ *
+ * Continuam em uso pelas telas de Fornecedores, Produtos e Associação até que
+ * elas sejam reconstruídas sobre o novo design system (`@/components/ui`).
+ * Nada novo deve ser adicionado aqui — ver docs/09-design-system.md.
+ */
 export { Button } from './Button';
 export { Field } from './Field';
 export { Input } from './Input';

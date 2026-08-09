@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
-import { Button, Select, Table, useToast, type Column } from '@/components/ui';
+import { Button, Select, Table, useToast, type Column } from '@/components/legacy';
 import { ApiError, api } from '@/lib/api';
 import type { Fornecedor, Produto } from '@/lib/types';
 
@@ -161,7 +161,9 @@ export default function ProdutoFornecedoresPage() {
               <div style={{ flex: '1 1 260px' }}>
                 <Select
                   aria-label="Selecionar fornecedor"
-                  placeholder={disponiveis.length ? 'Selecione um fornecedor…' : 'Nenhum disponível'}
+                  placeholder={
+                    disponiveis.length ? 'Selecione um fornecedor…' : 'Nenhum disponível'
+                  }
                   value={selecionado}
                   disabled={disponiveis.length === 0}
                   options={disponiveis.map((f) => ({ value: String(f.id), label: f.nome_empresa }))}

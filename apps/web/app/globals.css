@@ -1,171 +1,177 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* ============================================================
-   Design System — tokens + estilos de componentes
+   Design System — tokens
    Sistema de Controle de Estoque (frontend)
+
+   Fonte da verdade das cores. Os tokens são declarados em HSL sem
+   a função `hsl()` para que o Tailwind possa compô-los com opacidade
+   (ex.: `bg-primary/10`). Consulte docs/09-design-system.md.
    ============================================================ */
 
-:root {
-  /* Cores — tema claro (paleta alinhada ao SDD: azul/verde) */
-  --bg: #f4f6fa;
-  --surface: #ffffff;
-  --surface-2: #f7f9fc;
-  --ink: #1c2330;
-  --muted: #5b6675;
-  --border: #e2e6ec;
-  --primary: #1f3a8a;
-  --primary-hover: #182e6e;
-  --primary-soft: #eef2ff;
-  --success: #0e7c66;
-  --success-soft: #e6f5f0;
-  --danger: #c0392b;
-  --danger-hover: #a32e22;
-  --danger-soft: #fdecea;
-  --warning: #b7791f;
-  --focus-ring: rgba(31, 58, 138, 0.35);
-
-  /* Tipografia */
-  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  --fs-xs: 0.75rem;
-  --fs-sm: 0.875rem;
-  --fs-md: 1rem;
-  --fs-lg: 1.25rem;
-  --fs-xl: 1.6rem;
-
-  /* Espaçamento (escala de 4px) */
-  --space-1: 4px;
-  --space-2: 8px;
-  --space-3: 12px;
-  --space-4: 16px;
-  --space-5: 24px;
-  --space-6: 32px;
-  --space-8: 48px;
-
-  /* Raio e sombra */
-  --radius-sm: 6px;
-  --radius: 10px;
-  --radius-lg: 14px;
-  --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.06);
-  --shadow: 0 4px 16px rgba(16, 24, 40, 0.1);
-  --shadow-lg: 0 12px 40px rgba(16, 24, 40, 0.18);
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --bg: #0f1420;
-    --surface: #161c29;
-    --surface-2: #1c2432;
-    --ink: #e7ebf2;
-    --muted: #9aa6b6;
-    --border: #29313f;
-    --primary: #8ea6ff;
-    --primary-hover: #a9bcff;
-    --primary-soft: #1a2236;
-    --success: #4fd1b0;
-    --success-soft: #10251f;
-    --danger: #f28b82;
-    --danger-hover: #f6a49d;
-    --danger-soft: #2a1512;
-    --warning: #e2b155;
-    --focus-ring: rgba(142, 166, 255, 0.4);
-    --shadow-sm: none;
-    --shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
-    --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.6);
+    /* ---- Superfícies e texto ---- */
+    --background: 0 0% 100%; /* #FFFFFF */
+    --card: 0 0% 100%; /* #FFFFFF */
+    --card-foreground: 0 0% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 10%;
+    --foreground: 0 0% 10%; /* #1A1A1A */
+    --muted: 220 27% 98%; /* #F8F9FB — background-muted */
+    --muted-foreground: 220 9% 46%; /* #6B7280 — foreground-muted */
+    --accent: 220 14% 96%; /* #F3F4F6 — hover de itens neutros */
+    --accent-foreground: 0 0% 10%;
+
+    /* ---- Ações ---- */
+    --primary: 0 0% 7%; /* #111111 */
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 0 0% 10%;
+
+    /* ---- Bordas e foco ---- */
+    --border: 220 13% 91%; /* #E5E7EB */
+    --input: 220 13% 91%;
+    --ring: 0 0% 10%;
+
+    /* ---- Cores semânticas (status de estoque) ---- */
+    --success: 142 76% 36%; /* #16A34A */
+    --success-foreground: 0 0% 100%;
+    --success-soft: 141 84% 93%; /* #DCFCE7 */
+    --success-soft-foreground: 142 72% 29%; /* #15803D */
+
+    --warning: 21 90% 48%; /* #EA580C */
+    --warning-foreground: 0 0% 100%;
+    --warning-soft: 34 100% 92%; /* #FFEDD5 */
+    --warning-soft-foreground: 17 88% 40%; /* #C2410C */
+
+    --destructive: 0 72% 51%; /* #DC2626 */
+    --destructive-foreground: 0 0% 100%;
+    --destructive-soft: 0 93% 94%; /* #FEE2E2 */
+    --destructive-soft-foreground: 0 74% 42%; /* #B91C1C */
+
+    /* ---- Sidebar escura (fixa à esquerda) ---- */
+    --sidebar: 0 0% 7%; /* #111111 */
+    --sidebar-foreground: 0 0% 82%;
+    --sidebar-muted: 0 0% 55%;
+    --sidebar-accent: 0 0% 13%; /* hover */
+    --sidebar-active: 0 0% 100%; /* item ativo (usado com opacidade) */
+    --sidebar-active-foreground: 0 0% 100%;
+    --sidebar-border: 0 0% 18%;
+
+    /* ---- Raio ---- */
+    --radius: 0.75rem; /* 12px — cards/tabelas; md = 8px; sm = 6px */
+
+    /* ---- Ponte para o CSS legado das telas ainda não migradas ---- */
+    --bg: #f8f9fb;
+    --surface: #ffffff;
+    --surface-2: #f8f9fb;
+    --ink: #1a1a1a;
+    --muted-legacy: #6b7280;
+    --border-legacy: #e5e7eb;
+    --primary-legacy: #111111;
+    --primary-hover: #2b2b2b;
+    --primary-soft: #f3f4f6;
+    --success-legacy: #16a34a;
+    --success-soft-legacy: #dcfce7;
+    --danger: #dc2626;
+    --danger-hover: #b91c1c;
+    --danger-soft: #fee2e2;
+    --warning-legacy: #ea580c;
+    --focus-ring: rgb(17 17 17 / 0.2);
+    --font-sans:
+      var(--font-inter), system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    --fs-xs: 0.75rem;
+    --fs-sm: 0.875rem;
+    --fs-md: 1rem;
+    --fs-lg: 1.25rem;
+    --fs-xl: 1.75rem;
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-5: 24px;
+    --space-6: 32px;
+    --space-8: 48px;
+    --radius-sm: 8px;
+    --radius-lg: 12px;
+    --shadow-sm: 0 1px 2px 0 rgb(16 24 40 / 0.04), 0 1px 3px 0 rgb(16 24 40 / 0.06);
+    --shadow: 0 1px 2px 0 rgb(16 24 40 / 0.04), 0 1px 3px 0 rgb(16 24 40 / 0.06);
+    --shadow-lg: 0 8px 32px -8px rgb(16 24 40 / 0.18), 0 2px 8px -2px rgb(16 24 40 / 0.08);
+  }
+
+  /* Tema escuro preparado (ativado por classe `.dark` no <html>).
+     Ainda não há alternador na UI — ver docs/09-design-system.md. */
+  .dark {
+    --background: 0 0% 7%;
+    --card: 0 0% 10%;
+    --card-foreground: 0 0% 96%;
+    --popover: 0 0% 10%;
+    --popover-foreground: 0 0% 96%;
+    --foreground: 0 0% 96%;
+    --muted: 0 0% 13%;
+    --muted-foreground: 220 9% 65%;
+    --accent: 0 0% 16%;
+    --accent-foreground: 0 0% 96%;
+    --primary: 0 0% 96%;
+    --primary-foreground: 0 0% 7%;
+    --secondary: 0 0% 16%;
+    --secondary-foreground: 0 0% 96%;
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 0 0% 83%;
+    --success-soft: 142 40% 16%;
+    --success-soft-foreground: 141 70% 78%;
+    --warning-soft: 21 50% 18%;
+    --warning-soft-foreground: 34 90% 78%;
+    --destructive-soft: 0 45% 18%;
+    --destructive-soft-foreground: 0 90% 84%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-background text-body text-foreground antialiased;
+    font-family: var(--font-sans);
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply m-0 text-foreground;
+  }
+
+  /* Foco visível e consistente em toda a aplicação (WCAG 2.4.7). */
+  :focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
   }
 }
 
-* {
-  box-sizing: border-box;
+@layer components {
+  /* Rótulo pequeno em caixa alta usado em StatCards, cabeçalhos de tabela e
+     listas de definição — o "caption" da escala tipográfica. */
+  .caption {
+    @apply text-caption font-medium uppercase text-muted-foreground;
+  }
 }
 
-html,
-body {
-  padding: 0;
-  margin: 0;
-}
+/* ============================================================
+   CSS legado das telas ainda não migradas (Fornecedores, Produtos,
+   Associação). Será removido conforme as telas forem reconstruídas
+   sobre o novo design system.
 
-body {
-  background: var(--bg);
-  color: var(--ink);
-  font-family: var(--font-sans);
-  font-size: var(--fs-md);
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-}
-
-a {
-  color: var(--primary);
-  text-decoration: none;
-}
-a:hover {
-  text-decoration: underline;
-}
-
-h1,
-h2,
-h3 {
-  margin: 0;
-  line-height: 1.25;
-  letter-spacing: -0.01em;
-}
-
-/* ---------- Layout ---------- */
-.app-shell {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-.navbar {
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  box-shadow: var(--shadow-sm);
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
-.navbar__inner {
-  max-width: 1080px;
-  margin: 0 auto;
-  padding: var(--space-3) var(--space-5);
-  display: flex;
-  align-items: center;
-  gap: var(--space-5);
-}
-.navbar__brand {
-  font-weight: 700;
-  color: var(--ink);
-  font-size: var(--fs-md);
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-}
-.navbar__links {
-  display: flex;
-  gap: var(--space-2);
-}
-.navbar__link {
-  color: var(--muted);
-  padding: var(--space-2) var(--space-3);
-  border-radius: var(--radius-sm);
-  font-size: var(--fs-sm);
-  font-weight: 500;
-}
-.navbar__link:hover {
-  color: var(--ink);
-  background: var(--surface-2);
-  text-decoration: none;
-}
-.navbar__link--active {
-  color: var(--primary);
-  background: var(--primary-soft);
-}
-
-.container {
-  width: 100%;
-  max-width: 1080px;
-  margin: 0 auto;
-  padding: var(--space-6) var(--space-5) var(--space-8);
-  flex: 1;
-}
+   Fica fora de `@layer components` de propósito: o Tailwind remove das
+   camadas o que não encontra literalmente no código, e várias dessas
+   classes são montadas em runtime (ex.: `btn btn--${variant}`).
+   ============================================================ */
 
 .page-header {
   display: flex;
@@ -177,26 +183,26 @@ h3 {
 }
 .page-header__title {
   font-size: var(--fs-xl);
+  font-weight: 600;
+  letter-spacing: -0.02em;
   color: var(--ink);
 }
 .page-header__subtitle {
-  color: var(--muted);
+  color: var(--muted-legacy);
   font-size: var(--fs-sm);
   margin-top: var(--space-1);
 }
 
-/* ---------- Card ---------- */
 .card {
   background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border: 1px solid var(--border-legacy);
+  border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
 }
 .card--pad {
   padding: var(--space-5);
 }
 
-/* ---------- Button ---------- */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -204,7 +210,7 @@ h3 {
   gap: var(--space-2);
   font-family: inherit;
   font-size: var(--fs-sm);
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1;
   padding: 10px 16px;
   border-radius: var(--radius-sm);
@@ -226,7 +232,7 @@ h3 {
   cursor: not-allowed;
 }
 .btn--primary {
-  background: var(--primary);
+  background: var(--primary-legacy);
   color: #fff;
 }
 .btn--primary:hover:not(:disabled) {
@@ -235,7 +241,7 @@ h3 {
 .btn--secondary {
   background: var(--surface);
   color: var(--ink);
-  border-color: var(--border);
+  border-color: var(--border-legacy);
 }
 .btn--secondary:hover:not(:disabled) {
   background: var(--surface-2);
@@ -249,7 +255,7 @@ h3 {
 }
 .btn--ghost {
   background: transparent;
-  color: var(--muted);
+  color: var(--muted-legacy);
 }
 .btn--ghost:hover:not(:disabled) {
   color: var(--ink);
@@ -260,7 +266,6 @@ h3 {
   font-size: var(--fs-xs);
 }
 
-/* ---------- Form fields ---------- */
 .field {
   display: flex;
   flex-direction: column;
@@ -269,7 +274,7 @@ h3 {
 }
 .field__label {
   font-size: var(--fs-sm);
-  font-weight: 600;
+  font-weight: 500;
   color: var(--ink);
 }
 .field__req {
@@ -284,7 +289,7 @@ h3 {
   font-size: var(--fs-sm);
   color: var(--ink);
   background: var(--surface);
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-legacy);
   border-radius: var(--radius-sm);
   padding: 10px 12px;
   transition:
@@ -299,7 +304,7 @@ h3 {
 .select:focus,
 .textarea:focus {
   outline: none;
-  border-color: var(--primary);
+  border-color: var(--primary-legacy);
   box-shadow: 0 0 0 3px var(--focus-ring);
 }
 .input--error,
@@ -318,14 +323,13 @@ h3 {
 }
 .field__hint {
   font-size: var(--fs-xs);
-  color: var(--muted);
+  color: var(--muted-legacy);
 }
 
-/* ---------- Table ---------- */
 .table-wrap {
   overflow-x: auto;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border: 1px solid var(--border-legacy);
+  border-radius: var(--radius-lg);
   background: var(--surface);
 }
 .table {
@@ -337,16 +341,16 @@ h3 {
 .table td {
   text-align: left;
   padding: var(--space-3) var(--space-4);
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--border-legacy);
   vertical-align: middle;
 }
 .table th {
   background: var(--surface-2);
-  color: var(--muted);
-  font-weight: 600;
+  color: var(--muted-legacy);
+  font-weight: 500;
   font-size: var(--fs-xs);
   text-transform: uppercase;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.06em;
   white-space: nowrap;
 }
 .table tbody tr:last-child td {
@@ -361,23 +365,21 @@ h3 {
   justify-content: flex-end;
 }
 
-/* ---------- Badge ---------- */
 .badge {
   display: inline-block;
   font-size: var(--fs-xs);
-  font-weight: 600;
+  font-weight: 500;
   padding: 2px 10px;
   border-radius: 999px;
   background: var(--primary-soft);
-  color: var(--primary);
+  color: var(--ink);
   border: 1px solid transparent;
 }
 
-/* ---------- States ---------- */
 .empty-state {
   text-align: center;
   padding: var(--space-8) var(--space-5);
-  color: var(--muted);
+  color: var(--muted-legacy);
 }
 .empty-state__title {
   color: var(--ink);
@@ -386,30 +388,24 @@ h3 {
 }
 .state-msg {
   padding: var(--space-5);
-  color: var(--muted);
+  color: var(--muted-legacy);
   text-align: center;
 }
 
 .spinner {
   width: 18px;
   height: 18px;
-  border: 2px solid var(--border);
-  border-top-color: var(--primary);
+  border: 2px solid var(--border-legacy);
+  border-top-color: var(--primary-legacy);
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
   display: inline-block;
 }
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
 
-/* ---------- Modal ---------- */
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(15, 20, 32, 0.5);
+  background: rgb(17 17 17 / 0.45);
   display: flex;
   align-items: flex-start;
   justify-content: center;
@@ -420,7 +416,7 @@ h3 {
 }
 .modal {
   background: var(--surface);
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-legacy);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);
   width: 100%;
@@ -433,10 +429,11 @@ h3 {
   align-items: center;
   justify-content: space-between;
   padding: var(--space-4) var(--space-5);
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--border-legacy);
 }
 .modal__title {
   font-size: var(--fs-lg);
+  font-weight: 600;
 }
 .modal__body {
   padding: var(--space-5);
@@ -446,10 +443,9 @@ h3 {
   justify-content: flex-end;
   gap: var(--space-3);
   padding: var(--space-4) var(--space-5);
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--border-legacy);
 }
 
-/* ---------- Toast ---------- */
 .toaster {
   position: fixed;
   top: var(--space-4);
@@ -465,10 +461,10 @@ h3 {
   align-items: flex-start;
   gap: var(--space-3);
   padding: var(--space-3) var(--space-4);
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-legacy);
   background: var(--surface);
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow-lg);
   animation: slide-in 0.2s ease;
 }
 .toast__icon {
@@ -480,10 +476,10 @@ h3 {
   color: var(--ink);
 }
 .toast--success {
-  border-left: 4px solid var(--success);
+  border-left: 4px solid var(--success-legacy);
 }
 .toast--success .toast__icon {
-  color: var(--success);
+  color: var(--success-legacy);
 }
 .toast--error {
   border-left: 4px solid var(--danger);
@@ -492,7 +488,6 @@ h3 {
   color: var(--danger);
 }
 
-/* ---------- Toolbar (busca + contagem) ---------- */
 .toolbar {
   display: flex;
   align-items: center;
@@ -505,12 +500,11 @@ h3 {
   max-width: 380px;
 }
 .toolbar__count {
-  color: var(--muted);
+  color: var(--muted-legacy);
   font-size: var(--fs-sm);
   white-space: nowrap;
 }
 
-/* ---------- Pagination ---------- */
 .pagination {
   display: flex;
   align-items: center;
@@ -519,11 +513,10 @@ h3 {
   margin-top: var(--space-4);
 }
 .pagination__info {
-  color: var(--muted);
+  color: var(--muted-legacy);
   font-size: var(--fs-sm);
 }
 
-/* ---------- Description list (detalhes read-only) ---------- */
 .dl {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -538,9 +531,9 @@ h3 {
 .dl__term {
   font-size: var(--fs-xs);
   text-transform: uppercase;
-  letter-spacing: 0.03em;
-  color: var(--muted);
-  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--muted-legacy);
+  font-weight: 500;
 }
 .dl__desc {
   color: var(--ink);
@@ -548,7 +541,6 @@ h3 {
   overflow-wrap: anywhere;
 }
 
-/* ---------- Utilities ---------- */
 .stack {
   display: flex;
   flex-direction: column;
@@ -564,31 +556,20 @@ h3 {
   grid-template-columns: 1fr 1fr;
   gap: var(--space-3);
 }
-@media (max-width: 520px) {
-  .grid-2 {
-    grid-template-columns: 1fr;
-  }
-}
-.text-muted {
-  color: var(--muted);
-}
-.text-sm {
-  font-size: var(--fs-sm);
-}
+/* `text-muted` não é declarado aqui de propósito: colidiria com o utilitário
+     homônimo do Tailwind (cor de superfície). Use `text-muted-foreground`. */
 .mono {
   font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
   font-size: 0.85em;
 }
 
-/* ---------- Responsivo ---------- */
+@media (max-width: 520px) {
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 640px) {
-  .container {
-    padding: var(--space-5) var(--space-4) var(--space-6);
-  }
-  .navbar__inner {
-    padding: var(--space-3) var(--space-4);
-    gap: var(--space-3);
-  }
   .page-header__title {
     font-size: var(--fs-lg);
   }
@@ -600,6 +581,11 @@ h3 {
   }
 }
 
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
 @keyframes fade-in {
   from {
     opacity: 0;

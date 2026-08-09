@@ -45,6 +45,7 @@ tanto no backend quanto no frontend. O detalhamento de cada cenário está no
 | Documentação de API | **@nestjs/swagger** (OpenAPI) | Documentação viva da API em `/docs` |
 | Validação | **class-validator / class-transformer** | Validação e transformação de DTOs |
 | Frontend | **React + Next.js** (App Router, TypeScript) | Interface web e consumo da API |
+| UI / Design System | **Tailwind CSS + shadcn/ui** (Radix UI) · **lucide-react** · **sonner** | Tokens de design, componentes acessíveis, ícones e toasts |
 | Qualidade | **ESLint · Prettier · testes unitários** | Padrão de código e confiabilidade |
 | Versionamento | **Git + Conventional Commits** | Controle de versão com histórico granular |
 
@@ -73,7 +74,8 @@ detalhamento e um commit no padrão *Conventional Commits*.
 | **6** | 2026-08-09 | Módulo de Associação (N:N) completo em `apps/api`: model de junção `ProdutoFornecedor` + `belongsToMany` nas entities; endpoints de associar (bloqueando duplicidade), desassociar e listar (fornecedores↔produtos) sob a tag `associacao`. **Backend funcionalmente completo** (3 features). Testes: 43 verdes no total. Fluxo N:N validado por `curl` (201/409/200/404/400). | `docs/06-modulo-associacao.md` | `feat(api): associacao muitos-para-muitos entre produto e fornecedor` |
 | **7** | 2026-08-09 | Scaffold do frontend em `apps/web`: Next.js 15 (App Router) + TS/ESLint/Prettier; design system mínimo (tokens + Button/Input/Select/Modal/Toast/Table); client HTTP tipado consumindo `NEXT_PUBLIC_API_URL`; telas `/fornecedores`, `/produtos` e `/produtos/[id]/fornecedores`. CORS habilitado na API. Build/lint verdes e rotas servidas (porta 3001). | `docs/07-scaffold-frontend.md` | `chore(web): scaffold Next.js com design system inicial` |
 | **8** | 2026-08-09 | Telas de Fornecedor, Produto e Associação integradas à API: máscaras (CNPJ/telefone), **validação client-side espelhando o backend**, erros por campo, busca + paginação, e a associação com detalhes read-only do produto. Responsividade e acessibilidade mínimas. **MVP full-stack funcionalmente completo.** Build/lint verdes. | `docs/08-telas-frontend.md` | `feat(web): telas de fornecedor, produto e associacao integradas a api` |
-| 9 | — | Consolidação final da documentação. | — | *pendente* |
+| **9** | 2026-08-09 | **Fundação do design system** do frontend, inspirada em um dashboard admin: Tailwind CSS + shadcn/ui instalados e configurados; tokens de cor/tipografia/espaçamento/raio/sombra em `tailwind.config.ts` + `globals.css`; 10 componentes gerados via shadcn/ui e 4 de layout próprios (`AppShell`, `Sidebar`, `Header`, `StatCard`); casca com **sidebar escura fixa** + conteúdo claro; vitrine em `/design-system`. Componentes da Etapa 7 isolados em `components/legacy/` — as 3 telas seguem funcionando. Build/lint/type-check verdes. | `docs/09-design-system.md` | `feat(web): fundacao do design system com tailwind e shadcn/ui` |
+| 10 | — | Layout shell responsivo (validação nos 3 breakpoints) e reconstrução das telas sobre o design system. | — | *pendente* |
 
 ---
 
@@ -81,8 +83,13 @@ detalhamento e um commit no padrão *Conventional Commits*.
 
 - **MVP full-stack completo** (Etapas 2–8): backend (3 features + API documentada na Swagger) e
   frontend (3 telas integradas, com validação, busca/paginação e feedback ao usuário).
-- **Etapa 9 (opcional):** consolidação final da documentação; possíveis evoluções — edição inline,
-  filtros avançados, testes de componente/E2E e deploy.
+- **Redesign do frontend em andamento** (a partir da Etapa 9): a fundação do design system está
+  pronta (tokens + componentes + casca do dashboard); as telas ainda usam o CSS da Etapa 7.
+- **Etapa 10:** validar o layout shell nos três breakpoints (mobile ~375px, tablet ~768px, desktop
+  ~1280px) e reconstruir Produtos, Fornecedores e Associação sobre o design system, removendo
+  `components/legacy/`.
+- **Depois:** consolidação final da documentação; possíveis evoluções — edição inline, filtros
+  avançados, testes de componente/E2E e deploy.
 
 > Este documento deve ser atualizado ao final de cada etapa: nova linha no *Histórico de Etapas*
 > (com data, resumo, `.md` e commit) e ajuste dos *Próximos Passos*.

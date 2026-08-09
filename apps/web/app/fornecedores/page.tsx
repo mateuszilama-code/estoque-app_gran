@@ -10,7 +10,7 @@ import {
   Table,
   useToast,
   type Column,
-} from '@/components/ui';
+} from '@/components/legacy';
 import { ApiError, api } from '@/lib/api';
 import { maskCNPJ, maskTelefone } from '@/lib/masks';
 import { useListControls } from '@/lib/useListControls';

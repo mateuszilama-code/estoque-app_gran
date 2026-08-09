@@ -11,7 +11,15 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 /** Botão do design system, com variantes, tamanhos e estado de loading. */
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
-  { variant = 'primary', size = 'md', loading = false, className = '', children, disabled, ...rest },
+  {
+    variant = 'primary',
+    size = 'md',
+    loading = false,
+    className = '',
+    children,
+    disabled,
+    ...rest
+  },
   ref,
 ) {
   const classes = ['btn', `btn--${variant}`, size === 'sm' ? 'btn--sm' : '', className]

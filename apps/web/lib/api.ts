@@ -44,8 +44,7 @@ async function parseError(response: Response): Promise<ApiError> {
     // Erros de validação (400): uma mensagem por campo.
     return new ApiError(body.message[0] ?? 'Dados inválidos.', response.status, body.message);
   }
-  const message =
-    body.message ?? body.error ?? `Erro ${response.status} ao comunicar com a API.`;
+  const message = body.message ?? body.error ?? `Erro ${response.status} ao comunicar com a API.`;
   return new ApiError(message, response.status);
 }
 

@@ -144,9 +144,9 @@
     <p class="subtitle">Sistema de Controle de Estoque — Projeto Integrador Full Stack (Fase 2)</p>
     <div class="meta-grid">
       <div><span>Projeto</span><strong>Controle de Estoque</strong></div>
-      <div><span>Versão do SDD</span><strong>0.9</strong></div>
+      <div><span>Versão do SDD</span><strong>1.0</strong></div>
       <div><span>Última atualização</span><strong>2026-08-09</strong></div>
-      <div><span>Etapa</span><strong>8 — Telas (MVP completo)</strong></div>
+      <div><span>Etapa</span><strong>9 — Design System (fundação)</strong></div>
     </div>
   </header>
 
@@ -159,6 +159,7 @@
       <li><a href="#dominio">Modelo de Domínio</a></li>
       <li><a href="#decisoes">Decisões Técnicas</a></li>
       <li><a href="#frontend">Frontend</a></li>
+      <li><a href="#design-system">Design System</a></li>
       <li><a href="#revisoes">Histórico de Revisões</a></li>
     </ol>
   </nav>
@@ -598,11 +599,145 @@
       + design system) e as três telas integradas à API. Build de produção e lint/type-check verdes;
       rotas servidas e integração validada (CORS). Junto ao backend, fecha o <strong>MVP</strong>.
     </div>
+
+    <h3>6.5 Redesign <span class="badge done">Etapa 9</span></h3>
+    <p>
+      Com o MVP funcional entregue, o frontend passou por um <strong>redesign</strong> no padrão de
+      dashboard administrativo (sidebar escura fixa + conteúdo claro). O design system mínimo em CSS
+      puro descrito em 6.2 foi substituído por <strong>Tailwind CSS + shadcn/ui</strong>; os tokens,
+      componentes e a casca de layout estão descritos na <a href="#design-system">Seção 7</a>. As três
+      telas continuam funcionando sobre o CSS anterior (mantido em <code>components/legacy/</code>)
+      enquanto são reconstruídas sobre a nova fundação.
+    </p>
+  </section>
+
+  <!-- ============================================================ -->
+  <section id="design-system">
+    <h2>7. Design System <a class="top-link" href="#topo">▲ topo</a></h2>
+    <p>
+      Fundação visual do frontend, introduzida na <strong>Etapa 9</strong> e inspirada em um dashboard
+      administrativo de e-commerce: <strong>sidebar escura fixa</strong>, área de conteúdo clara,
+      faixa de indicadores no topo das listagens, tabelas densas com badges de status coloridos,
+      cantos arredondados e sombra única e sutil.
+    </p>
+
+    <h3>7.1 Stack</h3>
+    <table>
+      <thead><tr><th>Camada</th><th>Escolha</th><th>Papel</th></tr></thead>
+      <tbody>
+        <tr><td>CSS</td><td><strong>Tailwind CSS 3.4</strong></td>
+          <td>Utilitários gerados a partir dos tokens; configuração em <code>tailwind.config.ts</code></td></tr>
+        <tr><td>Componentes</td><td><strong>shadcn/ui</strong> (Radix UI + CVA)</td>
+          <td>Componentes acessíveis copiados para <code>components/ui/</code> — código do projeto, não dependência</td></tr>
+        <tr><td>Ícones</td><td><strong>lucide-react</strong></td><td>Ícones da sidebar, header e badges</td></tr>
+        <tr><td>Feedback</td><td><strong>sonner</strong></td><td>Toasts de sucesso/erro</td></tr>
+        <tr><td>Tipografia</td><td><strong>Inter</strong> (<code>next/font</code>)</td><td>Fonte da interface, com fallback do sistema</td></tr>
+      </tbody>
+    </table>
+    <p>
+      Os valores dos tokens ficam em <code>app/globals.css</code> como custom properties em HSL;
+      <code>tailwind.config.ts</code> apenas os expõe como utilitários. Um token, três consumidores:
+      classes utilitárias, componentes do shadcn/ui e CSS puro.
+    </p>
+
+    <h3>7.2 Tokens — cores</h3>
+    <table>
+      <thead><tr><th>Token</th><th>Valor</th><th>Utilitário</th><th>Uso</th></tr></thead>
+      <tbody>
+        <tr><td><code>--background</code></td><td><code>#FFFFFF</code></td><td><code>bg-background</code></td><td>Fundo do conteúdo</td></tr>
+        <tr><td><code>--muted</code></td><td><code>#F8F9FB</code></td><td><code>bg-muted</code></td><td>Fundo suave (cabeçalho de tabela, chips)</td></tr>
+        <tr><td><code>--foreground</code></td><td><code>#1A1A1A</code></td><td><code>text-foreground</code></td><td>Texto principal</td></tr>
+        <tr><td><code>--muted-foreground</code></td><td><code>#6B7280</code></td><td><code>text-muted-foreground</code></td><td>Rótulos e textos de apoio</td></tr>
+        <tr><td><code>--border</code> / <code>--input</code></td><td><code>#E5E7EB</code></td><td><code>border-border</code></td><td>Bordas de cards, tabelas e campos</td></tr>
+        <tr><td><code>--primary</code></td><td><code>#111111</code></td><td><code>bg-primary</code></td><td>Ação primária (botão preto)</td></tr>
+        <tr><td><code>--secondary</code> / <code>--accent</code></td><td><code>#F3F4F6</code></td><td><code>bg-secondary</code></td><td>Ação secundária e <em>hover</em> neutro</td></tr>
+        <tr><td><code>--success</code> <span class="badge">soft</span></td><td><code>#16A34A</code> · <code>#DCFCE7</code>/<code>#15803D</code></td><td><code>bg-success-soft</code></td><td>Status "Em estoque"</td></tr>
+        <tr><td><code>--warning</code> <span class="badge">soft</span></td><td><code>#EA580C</code> · <code>#FFEDD5</code>/<code>#C2410C</code></td><td><code>bg-warning-soft</code></td><td>Status "Estoque baixo"</td></tr>
+        <tr><td><code>--destructive</code> <span class="badge">soft</span></td><td><code>#DC2626</code> · <code>#FEE2E2</code>/<code>#B91C1C</code></td><td><code>bg-destructive-soft</code></td><td>Status "Esgotado" e exclusões</td></tr>
+        <tr><td><code>--sidebar</code></td><td><code>#111111</code></td><td><code>bg-sidebar</code></td><td>Fundo da sidebar</td></tr>
+        <tr><td><code>--sidebar-foreground</code> / <code>-muted</code> / <code>-accent</code> / <code>-active</code> / <code>-border</code></td>
+          <td>branco a 82% / 55% / 13% / 100% / 18%</td><td><code>text-sidebar-foreground</code>…</td>
+          <td>Item inativo, rótulo de seção, <em>hover</em>, item ativo e divisórias</td></tr>
+      </tbody>
+    </table>
+    <p>
+      Cada cor semântica tem um par <strong>soft</strong> (fundo claro + texto escuro da mesma matiz),
+      usado nos badges de status por garantir contraste <strong>WCAG AA</strong> sobre fundo branco.
+    </p>
+
+    <h3>7.3 Tokens — tipografia</h3>
+    <table>
+      <thead><tr><th>Utilitário</th><th>Tamanho / entrelinha</th><th>Peso</th><th>Uso</th></tr></thead>
+      <tbody>
+        <tr><td><code>text-h1</code></td><td>28px / 34px · <code>-0.02em</code></td><td>600</td><td>Título de página</td></tr>
+        <tr><td><code>text-h2</code></td><td>20px / 28px · <code>-0.01em</code></td><td>600</td><td>Subtítulo de seção</td></tr>
+        <tr><td><code>text-h3</code></td><td>16px / 24px</td><td>600</td><td>Título de card</td></tr>
+        <tr><td><code>text-body</code></td><td>14px / 22px</td><td>400</td><td>Texto padrão (base do <code>body</code>)</td></tr>
+        <tr><td><code>text-caption</code> · <code>.caption</code></td><td>12px / 16px · <code>+0.06em</code></td><td>500</td><td>Rótulo em caixa alta, cor muted</td></tr>
+        <tr><td><code>text-stat</code></td><td>24px / 30px · <code>-0.02em</code></td><td>600</td><td>Número grande do <code>StatCard</code></td></tr>
+      </tbody>
+    </table>
+
+    <h3>7.4 Tokens — espaçamento, raio, sombra e movimento</h3>
+    <table>
+      <thead><tr><th>Categoria</th><th>Valores</th><th>Observação</th></tr></thead>
+      <tbody>
+        <tr><td>Espaçamento</td>
+          <td>4 · 8 · 12 · 16 · 20 · 24 · 32 · 40px (<code>p-1</code> … <code>p-10</code>)</td>
+          <td>Escala padrão do Tailwind, já múltipla de 4px — não foi sobrescrita</td></tr>
+        <tr><td>Raio</td>
+          <td><code>rounded-lg</code> 12px · <code>rounded-md</code> 8px · <code>rounded-sm</code> 6px</td>
+          <td>Derivados de <code>--radius: 12px</code>: cards/tabelas, controles e elementos pequenos</td></tr>
+        <tr><td>Sombra</td>
+          <td><code>shadow-card</code> · <code>shadow-overlay</code></td>
+          <td>Uma única sombra para cards; a segunda só para Dialog, Sheet e Toast</td></tr>
+        <tr><td>Movimento</td>
+          <td>150ms (padrão) · 200ms (largura da sidebar)</td>
+          <td>Intensidade baixa: só cor, opacidade e largura — sem animação de entrada de conteúdo</td></tr>
+      </tbody>
+    </table>
+    <p>
+      O <strong>tema escuro</strong> já tem todos os tokens definidos em <code>.dark</code>
+      (<code>darkMode: ['class']</code>), mas não há alternador na interface: fica preparado para uma
+      evolução futura.
+    </p>
+
+    <h3>7.5 Componentes</h3>
+    <table>
+      <thead><tr><th>Origem</th><th>Componentes</th></tr></thead>
+      <tbody>
+        <tr><td><strong>shadcn/ui</strong> (<code>components/ui/</code>)</td>
+          <td><code>Button</code>, <code>Input</code>, <code>Select</code>, <code>Dialog</code>,
+            <code>Sheet</code>, <code>Table</code>, <code>Badge</code>, <code>Toast</code> (Sonner),
+            <code>Skeleton</code>, <code>Card</code></td></tr>
+        <tr><td><strong>Próprios</strong> (<code>components/layout/</code>)</td>
+          <td><code>AppShell</code> (casca), <code>Sidebar</code> + <code>SidebarMobile</code>
+            (expandida/recolhida/drawer), <code>Header</code> (título + busca + ações),
+            <code>StatCard</code> + <code>StatCardGrid</code> (faixa de indicadores)</td></tr>
+        <tr><td><strong>Legado</strong> (<code>components/legacy/</code>)</td>
+          <td>Componentes da Etapa 7 (CSS puro), ainda usados pelas telas não migradas — removidos
+            conforme cada tela for reconstruída</td></tr>
+      </tbody>
+    </table>
+    <p>
+      A rota <code>/design-system</code> é a <strong>vitrine viva</strong> do sistema: renderiza
+      paleta, escala tipográfica, espaçamento, raio/sombra e todos os componentes com os tokens reais.
+      Acessibilidade: anel de foco visível global, <code>aria-current</code> no item de navegação
+      ativo, <code>aria-label</code> em botões só de ícone e rótulos em <em>screen-reader only</em> no
+      drawer.
+    </p>
+
+    <div class="callout">
+      <strong>Fundação do design system concluída <span class="badge done">Etapa 9</span>.</strong>
+      Tokens, 10 componentes do shadcn/ui e 4 componentes de layout próprios, com a casca do
+      dashboard montada. Build, lint e type-check verdes. As telas de Produtos, Fornecedores e
+      Associação serão reconstruídas sobre esta base nas etapas seguintes.
+    </div>
   </section>
 
   <!-- ============================================================ -->
   <section id="revisoes">
-    <h2>7. Histórico de Revisões <a class="top-link" href="#topo">▲ topo</a></h2>
+    <h2>8. Histórico de Revisões <a class="top-link" href="#topo">▲ topo</a></h2>
     <p>Registro das mudanças deste SDD ao longo das etapas do projeto.</p>
     <table>
       <thead><tr><th>Data</th><th>Etapa</th><th>Versão</th><th>Resumo da mudança</th></tr></thead>
@@ -680,6 +815,15 @@
           <td>Escopo (Seção 2) marcado como <strong>MVP funcionalmente completo</strong>
             (frontend + backend). Seção 6 (Frontend) atualizada com as três telas integradas
             (máscaras, validação client-side, busca/paginação, detalhes na associação).</td>
+        </tr>
+        <tr>
+          <td>2026-08-09</td>
+          <td>9 — Design System (fundação)</td>
+          <td>1.0</td>
+          <td>Nova seção <strong>7. Design System</strong>: stack de UI (Tailwind CSS + shadcn/ui +
+            lucide + sonner + Inter), tabelas de tokens (cores, tipografia, espaçamento, raio, sombra
+            e movimento) e inventário de componentes (shadcn/ui, próprios e legado). Seção 6 ganhou a
+            subseção <strong>6.5 Redesign</strong>. Seção de Revisões renumerada para 8.</td>
         </tr>
       </tbody>
     </table>

@@ -13,12 +13,17 @@ import {
   Textarea,
   useToast,
   type Column,
-} from '@/components/ui';
+} from '@/components/legacy';
 import { ApiError, api } from '@/lib/api';
 import { onlyDigits } from '@/lib/masks';
 import { useListControls } from '@/lib/useListControls';
 import { validarProduto, type ProdutoErrors, type ProdutoFormValues } from '@/lib/validators';
-import { CATEGORIAS_PRODUTO, type CategoriaProduto, type CreateProdutoInput, type Produto } from '@/lib/types';
+import {
+  CATEGORIAS_PRODUTO,
+  type CategoriaProduto,
+  type CreateProdutoInput,
+  type Produto,
+} from '@/lib/types';
 
 const FORM_VAZIO: ProdutoFormValues = {
   nome: '',
@@ -110,7 +115,8 @@ export default function ProdutosPage() {
         categoria: form.categoria as CategoriaProduto,
       };
       if (form.codigo_barras.trim()) payload.codigo_barras = form.codigo_barras.trim();
-      if (form.quantidade_estoque.trim()) payload.quantidade_estoque = Number(form.quantidade_estoque);
+      if (form.quantidade_estoque.trim())
+        payload.quantidade_estoque = Number(form.quantidade_estoque);
       if (form.data_validade) payload.data_validade = form.data_validade;
       if (form.imagem_url.trim()) payload.imagem_url = form.imagem_url.trim();
 
@@ -141,7 +147,10 @@ export default function ProdutosPage() {
 
   const columns: Column<Produto>[] = [
     { header: 'Produto', cell: (p) => <strong>{p.nome}</strong> },
-    { header: 'Código de barras', cell: (p) => <span className="mono">{p.codigo_barras ?? '—'}</span> },
+    {
+      header: 'Código de barras',
+      cell: (p) => <span className="mono">{p.codigo_barras ?? '—'}</span>,
+    },
     { header: 'Categoria', cell: (p) => <span className="badge">{p.categoria}</span> },
     { header: 'Estoque', align: 'right', cell: (p) => p.quantidade_estoque },
     {
@@ -295,11 +304,18 @@ export default function ProdutosPage() {
                 placeholder="7891000100001"
                 value={form.codigo_barras}
                 invalid={Boolean(erros.codigo_barras)}
-                onChange={(e) => atualizar('codigo_barras', onlyDigits(e.target.value).slice(0, 14))}
+                onChange={(e) =>
+                  atualizar('codigo_barras', onlyDigits(e.target.value).slice(0, 14))
+                }
               />
             </Field>
 
-            <Field label="Data de validade" htmlFor="data_validade" error={erros.data_validade} hint="Opcional">
+            <Field
+              label="Data de validade"
+              htmlFor="data_validade"
+              error={erros.data_validade}
+              hint="Opcional"
+            >
               <Input
                 id="data_validade"
                 type="date"

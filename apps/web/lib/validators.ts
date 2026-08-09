@@ -62,7 +62,10 @@ export function validarProduto(f: ProdutoFormValues): ProdutoErrors {
 
   if (!f.descricao.trim()) e.descricao = 'descricao é obrigatória.';
 
-  if (!f.categoria || !CATEGORIAS_PRODUTO.includes(f.categoria as (typeof CATEGORIAS_PRODUTO)[number]))
+  if (
+    !f.categoria ||
+    !CATEGORIAS_PRODUTO.includes(f.categoria as (typeof CATEGORIAS_PRODUTO)[number])
+  )
     e.categoria = 'categoria deve ser uma de: Eletrônicos, Alimentos, Vestuário, Outro.';
 
   if (f.codigo_barras.trim() && !CODIGO_BARRAS_RE.test(f.codigo_barras.trim()))
@@ -70,7 +73,8 @@ export function validarProduto(f: ProdutoFormValues): ProdutoErrors {
 
   if (f.quantidade_estoque.trim()) {
     const n = Number(f.quantidade_estoque);
-    if (!Number.isInteger(n)) e.quantidade_estoque = 'quantidade_estoque deve ser um número inteiro.';
+    if (!Number.isInteger(n))
+      e.quantidade_estoque = 'quantidade_estoque deve ser um número inteiro.';
     else if (n < 0) e.quantidade_estoque = 'quantidade_estoque não pode ser negativa.';
   }
 

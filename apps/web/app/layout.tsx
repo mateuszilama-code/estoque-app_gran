@@ -1,8 +1,15 @@
 import type { Metadata } from 'next';
+import { Inter } from 'next/font/google';
 import { ReactNode } from 'react';
-import { Navbar } from '@/components/layout/Navbar';
-import { ToastProvider } from '@/components/ui';
+import { AppShell } from '@/components/layout/AppShell';
+import { ToastProvider } from '@/components/legacy';
 import './globals.css';
+
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+});
 
 export const metadata: Metadata = {
   title: 'Controle de Estoque',
@@ -11,13 +18,12 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="pt-BR">
+    <html lang="pt-BR" className={inter.variable}>
       <body>
+        {/* ToastProvider é o toaster legado, ainda consumido pelas telas não migradas.
+            As telas novas usam `toast()` do Sonner, montado dentro do AppShell. */}
         <ToastProvider>
-          <div className="app-shell">
-            <Navbar />
-            <main className="container">{children}</main>
-          </div>
+          <AppShell>{children}</AppShell>
         </ToastProvider>
       </body>
     </html>
