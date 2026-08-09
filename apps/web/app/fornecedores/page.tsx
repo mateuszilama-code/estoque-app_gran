@@ -1,18 +1,23 @@
 'use client';
 
 import { FormEvent, useCallback, useEffect, useState } from 'react';
-import { Button, Field, Input, Modal, Table, useToast, type Column } from '@/components/ui';
+import {
+  Button,
+  Field,
+  Input,
+  Modal,
+  Pagination,
+  Table,
+  useToast,
+  type Column,
+} from '@/components/ui';
 import { ApiError, api } from '@/lib/api';
+import { maskCNPJ, maskTelefone } from '@/lib/masks';
+import { useListControls } from '@/lib/useListControls';
+import { validarFornecedor, type FornecedorErrors } from '@/lib/validators';
 import type { CreateFornecedorInput, Fornecedor } from '@/lib/types';
 
-const CAMPOS: { key: keyof CreateFornecedorInput; label: string; placeholder: string }[] = [
-  { key: 'nome_empresa', label: 'Nome da empresa', placeholder: 'Tech Distribuidora LTDA' },
-  { key: 'cnpj', label: 'CNPJ', placeholder: '00.000.000/0000-00' },
-  { key: 'endereco', label: 'Endereço', placeholder: 'Rua, nº - Cidade/UF' },
-  { key: 'telefone', label: 'Telefone', placeholder: '(00) 00000-0000' },
-  { key: 'email', label: 'E-mail', placeholder: 'contato@empresa.com' },
-  { key: 'contato_principal', label: 'Contato principal', placeholder: 'Nome do responsável' },
-];
+type CampoFornecedor = keyof CreateFornecedorInput;
 
 const FORM_VAZIO: CreateFornecedorInput = {
   nome_empresa: '',
@@ -24,10 +29,18 @@ const FORM_VAZIO: CreateFornecedorInput = {
 };
 
 /** Distribui as mensagens de erro do backend (que iniciam com o nome do campo) por campo. */
-function mapearErros(mensagens: string[]): Partial<Record<keyof CreateFornecedorInput, string>> {
-  const erros: Partial<Record<keyof CreateFornecedorInput, string>> = {};
+function mapearErrosApi(mensagens: string[]): FornecedorErrors {
+  const chaves: CampoFornecedor[] = [
+    'nome_empresa',
+    'cnpj',
+    'endereco',
+    'telefone',
+    'email',
+    'contato_principal',
+  ];
+  const erros: FornecedorErrors = {};
   for (const msg of mensagens) {
-    const campo = CAMPOS.find((c) => msg.startsWith(c.key))?.key;
+    const campo = chaves.find((c) => msg.startsWith(c));
     if (campo && !erros[campo]) erros[campo] = msg;
   }
   return erros;
@@ -41,7 +54,7 @@ export default function FornecedoresPage() {
 
   const [modalAberto, setModalAberto] = useState(false);
   const [form, setForm] = useState<CreateFornecedorInput>(FORM_VAZIO);
-  const [erros, setErros] = useState<Partial<Record<keyof CreateFornecedorInput, string>>>({});
+  const [erros, setErros] = useState<FornecedorErrors>({});
   const [enviando, setEnviando] = useState(false);
 
   const carregar = useCallback(async () => {
@@ -60,14 +73,31 @@ export default function FornecedoresPage() {
     void carregar();
   }, [carregar]);
 
+  const searchable = useCallback(
+    (f: Fornecedor) => `${f.nome_empresa} ${f.cnpj} ${f.contato_principal} ${f.email}`,
+    [],
+  );
+  const lista = useListControls(fornecedores, searchable);
+
   function abrirModal() {
     setForm(FORM_VAZIO);
     setErros({});
     setModalAberto(true);
   }
 
+  function atualizar(campo: CampoFornecedor, valor: string) {
+    setForm((prev) => ({ ...prev, [campo]: valor }));
+    if (erros[campo]) setErros((prev) => ({ ...prev, [campo]: undefined }));
+  }
+
   async function enviar(e: FormEvent) {
     e.preventDefault();
+    const errosClient = validarFornecedor(form);
+    if (Object.keys(errosClient).length > 0) {
+      setErros(errosClient);
+      return;
+    }
+
     setEnviando(true);
     setErros({});
     try {
@@ -77,7 +107,7 @@ export default function FornecedoresPage() {
       await carregar();
     } catch (err) {
       if (err instanceof ApiError && err.fieldErrors.length > 0) {
-        setErros(mapearErros(err.fieldErrors));
+        setErros(mapearErrosApi(err.fieldErrors));
       }
       toast.error(err instanceof ApiError ? err.message : 'Não foi possível cadastrar.');
     } finally {
@@ -139,13 +169,37 @@ export default function FornecedoresPage() {
           </div>
         </div>
       ) : (
-        <Table
-          columns={columns}
-          rows={fornecedores}
-          keyField={(f) => f.id}
-          emptyTitle="Nenhum fornecedor cadastrado"
-          emptyHint="Clique em “Novo fornecedor” para começar."
-        />
+        <>
+          <div className="toolbar">
+            <div className="toolbar__search">
+              <Input
+                type="search"
+                aria-label="Buscar fornecedores"
+                placeholder="Buscar por empresa, CNPJ, contato…"
+                value={lista.query}
+                onChange={(e) => lista.setQuery(e.target.value)}
+              />
+            </div>
+            <span className="toolbar__count">
+              {lista.total} {lista.total === 1 ? 'fornecedor' : 'fornecedores'}
+            </span>
+          </div>
+
+          <Table
+            columns={columns}
+            rows={lista.pageItems}
+            keyField={(f) => f.id}
+            emptyTitle={
+              fornecedores.length === 0
+                ? 'Nenhum fornecedor cadastrado'
+                : 'Nenhum resultado para a busca'
+            }
+            emptyHint={
+              fornecedores.length === 0 ? 'Clique em “Novo fornecedor” para começar.' : undefined
+            }
+          />
+          <Pagination page={lista.page} totalPages={lista.totalPages} onPage={lista.setPage} />
+        </>
       )}
 
       <Modal
@@ -164,24 +218,77 @@ export default function FornecedoresPage() {
         }
       >
         <form id="form-fornecedor" onSubmit={enviar} noValidate>
-          {CAMPOS.map((campo) => (
-            <Field
-              key={campo.key}
-              label={campo.label}
-              htmlFor={campo.key}
-              required
-              error={erros[campo.key]}
-            >
+          <Field label="Nome da empresa" htmlFor="nome_empresa" required error={erros.nome_empresa}>
+            <Input
+              id="nome_empresa"
+              placeholder="Tech Distribuidora LTDA"
+              value={form.nome_empresa}
+              invalid={Boolean(erros.nome_empresa)}
+              onChange={(e) => atualizar('nome_empresa', e.target.value)}
+            />
+          </Field>
+
+          <div className="grid-2">
+            <Field label="CNPJ" htmlFor="cnpj" required error={erros.cnpj}>
               <Input
-                id={campo.key}
-                type={campo.key === 'email' ? 'email' : 'text'}
-                placeholder={campo.placeholder}
-                value={form[campo.key]}
-                invalid={Boolean(erros[campo.key])}
-                onChange={(e) => setForm((prev) => ({ ...prev, [campo.key]: e.target.value }))}
+                id="cnpj"
+                inputMode="numeric"
+                placeholder="00.000.000/0000-00"
+                value={form.cnpj}
+                invalid={Boolean(erros.cnpj)}
+                onChange={(e) => atualizar('cnpj', maskCNPJ(e.target.value))}
               />
             </Field>
-          ))}
+
+            <Field label="Telefone" htmlFor="telefone" required error={erros.telefone}>
+              <Input
+                id="telefone"
+                inputMode="numeric"
+                placeholder="(00) 00000-0000"
+                value={form.telefone}
+                invalid={Boolean(erros.telefone)}
+                onChange={(e) => atualizar('telefone', maskTelefone(e.target.value))}
+              />
+            </Field>
+          </div>
+
+          <Field label="Endereço" htmlFor="endereco" required error={erros.endereco}>
+            <Input
+              id="endereco"
+              placeholder="Rua, nº - Cidade/UF"
+              value={form.endereco}
+              invalid={Boolean(erros.endereco)}
+              onChange={(e) => atualizar('endereco', e.target.value)}
+            />
+          </Field>
+
+          <div className="grid-2">
+            <Field label="E-mail" htmlFor="email" required error={erros.email}>
+              <Input
+                id="email"
+                type="email"
+                placeholder="contato@empresa.com"
+                value={form.email}
+                invalid={Boolean(erros.email)}
+                onChange={(e) => atualizar('email', e.target.value)}
+              />
+            </Field>
+
+            <Field
+              label="Contato principal"
+              htmlFor="contato_principal"
+              required
+              error={erros.contato_principal}
+            >
+              <Input
+                id="contato_principal"
+                placeholder="Nome do responsável"
+                value={form.contato_principal}
+                invalid={Boolean(erros.contato_principal)}
+                onChange={(e) => atualizar('contato_principal', e.target.value)}
+              />
+            </Field>
+          </div>
         </form>
       </Modal>
     </>

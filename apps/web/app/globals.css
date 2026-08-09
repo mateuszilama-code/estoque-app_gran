@@ -492,6 +492,62 @@ h3 {
   color: var(--danger);
 }
 
+/* ---------- Toolbar (busca + contagem) ---------- */
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+  flex-wrap: wrap;
+}
+.toolbar__search {
+  flex: 1 1 260px;
+  max-width: 380px;
+}
+.toolbar__count {
+  color: var(--muted);
+  font-size: var(--fs-sm);
+  white-space: nowrap;
+}
+
+/* ---------- Pagination ---------- */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}
+.pagination__info {
+  color: var(--muted);
+  font-size: var(--fs-sm);
+}
+
+/* ---------- Description list (detalhes read-only) ---------- */
+.dl {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-4);
+}
+.dl__item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.dl__term {
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--muted);
+  font-weight: 600;
+}
+.dl__desc {
+  color: var(--ink);
+  font-size: var(--fs-sm);
+  overflow-wrap: anywhere;
+}
+
 /* ---------- Utilities ---------- */
 .stack {
   display: flex;
@@ -522,6 +578,26 @@ h3 {
 .mono {
   font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
   font-size: 0.85em;
+}
+
+/* ---------- Responsivo ---------- */
+@media (max-width: 640px) {
+  .container {
+    padding: var(--space-5) var(--space-4) var(--space-6);
+  }
+  .navbar__inner {
+    padding: var(--space-3) var(--space-4);
+    gap: var(--space-3);
+  }
+  .page-header__title {
+    font-size: var(--fs-lg);
+  }
+  .pagination {
+    justify-content: space-between;
+  }
+  .toolbar__search {
+    max-width: none;
+  }
 }
 
 @keyframes fade-in {

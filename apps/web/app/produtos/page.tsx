@@ -2,21 +2,25 @@
 
 import Link from 'next/link';
 import { FormEvent, useCallback, useEffect, useState } from 'react';
-import { Button, Field, Input, Modal, Select, Table, Textarea, useToast, type Column } from '@/components/ui';
+import {
+  Button,
+  Field,
+  Input,
+  Modal,
+  Pagination,
+  Select,
+  Table,
+  Textarea,
+  useToast,
+  type Column,
+} from '@/components/ui';
 import { ApiError, api } from '@/lib/api';
+import { onlyDigits } from '@/lib/masks';
+import { useListControls } from '@/lib/useListControls';
+import { validarProduto, type ProdutoErrors, type ProdutoFormValues } from '@/lib/validators';
 import { CATEGORIAS_PRODUTO, type CategoriaProduto, type CreateProdutoInput, type Produto } from '@/lib/types';
 
-interface ProdutoForm {
-  nome: string;
-  codigo_barras: string;
-  descricao: string;
-  quantidade_estoque: string;
-  categoria: string;
-  data_validade: string;
-  imagem_url: string;
-}
-
-const FORM_VAZIO: ProdutoForm = {
+const FORM_VAZIO: ProdutoFormValues = {
   nome: '',
   codigo_barras: '',
   descricao: '',
@@ -26,7 +30,7 @@ const FORM_VAZIO: ProdutoForm = {
   imagem_url: '',
 };
 
-const CHAVES: (keyof ProdutoForm)[] = [
+const CHAVES: (keyof ProdutoFormValues)[] = [
   'nome',
   'codigo_barras',
   'descricao',
@@ -36,8 +40,8 @@ const CHAVES: (keyof ProdutoForm)[] = [
   'imagem_url',
 ];
 
-function mapearErros(mensagens: string[]): Partial<Record<keyof ProdutoForm, string>> {
-  const erros: Partial<Record<keyof ProdutoForm, string>> = {};
+function mapearErrosApi(mensagens: string[]): ProdutoErrors {
+  const erros: ProdutoErrors = {};
   for (const msg of mensagens) {
     const campo = CHAVES.find((c) => msg.startsWith(c));
     if (campo && !erros[campo]) erros[campo] = msg;
@@ -52,8 +56,8 @@ export default function ProdutosPage() {
   const [erroCarregar, setErroCarregar] = useState<string | null>(null);
 
   const [modalAberto, setModalAberto] = useState(false);
-  const [form, setForm] = useState<ProdutoForm>(FORM_VAZIO);
-  const [erros, setErros] = useState<Partial<Record<keyof ProdutoForm, string>>>({});
+  const [form, setForm] = useState<ProdutoFormValues>(FORM_VAZIO);
+  const [erros, setErros] = useState<ProdutoErrors>({});
   const [enviando, setEnviando] = useState(false);
 
   const carregar = useCallback(async () => {
@@ -72,18 +76,31 @@ export default function ProdutosPage() {
     void carregar();
   }, [carregar]);
 
+  const searchable = useCallback(
+    (p: Produto) => `${p.nome} ${p.codigo_barras ?? ''} ${p.categoria}`,
+    [],
+  );
+  const lista = useListControls(produtos, searchable);
+
   function abrirModal() {
     setForm(FORM_VAZIO);
     setErros({});
     setModalAberto(true);
   }
 
-  function atualizar(campo: keyof ProdutoForm, valor: string) {
+  function atualizar(campo: keyof ProdutoFormValues, valor: string) {
     setForm((prev) => ({ ...prev, [campo]: valor }));
+    if (erros[campo]) setErros((prev) => ({ ...prev, [campo]: undefined }));
   }
 
   async function enviar(e: FormEvent) {
     e.preventDefault();
+    const errosClient = validarProduto(form);
+    if (Object.keys(errosClient).length > 0) {
+      setErros(errosClient);
+      return;
+    }
+
     setEnviando(true);
     setErros({});
     try {
@@ -103,7 +120,7 @@ export default function ProdutosPage() {
       await carregar();
     } catch (err) {
       if (err instanceof ApiError && err.fieldErrors.length > 0) {
-        setErros(mapearErros(err.fieldErrors));
+        setErros(mapearErrosApi(err.fieldErrors));
       }
       toast.error(err instanceof ApiError ? err.message : 'Não foi possível cadastrar.');
     } finally {
@@ -169,13 +186,33 @@ export default function ProdutosPage() {
           </div>
         </div>
       ) : (
-        <Table
-          columns={columns}
-          rows={produtos}
-          keyField={(p) => p.id}
-          emptyTitle="Nenhum produto cadastrado"
-          emptyHint="Clique em “Novo produto” para começar."
-        />
+        <>
+          <div className="toolbar">
+            <div className="toolbar__search">
+              <Input
+                type="search"
+                aria-label="Buscar produtos"
+                placeholder="Buscar por nome, código, categoria…"
+                value={lista.query}
+                onChange={(e) => lista.setQuery(e.target.value)}
+              />
+            </div>
+            <span className="toolbar__count">
+              {lista.total} {lista.total === 1 ? 'produto' : 'produtos'}
+            </span>
+          </div>
+
+          <Table
+            columns={columns}
+            rows={lista.pageItems}
+            keyField={(p) => p.id}
+            emptyTitle={
+              produtos.length === 0 ? 'Nenhum produto cadastrado' : 'Nenhum resultado para a busca'
+            }
+            emptyHint={produtos.length === 0 ? 'Clique em “Novo produto” para começar.' : undefined}
+          />
+          <Pagination page={lista.page} totalPages={lista.totalPages} onPage={lista.setPage} />
+        </>
       )}
 
       <Modal
@@ -236,6 +273,7 @@ export default function ProdutosPage() {
                 id="quantidade_estoque"
                 type="number"
                 min={0}
+                inputMode="numeric"
                 placeholder="0"
                 value={form.quantidade_estoque}
                 invalid={Boolean(erros.quantidade_estoque)}
@@ -253,10 +291,11 @@ export default function ProdutosPage() {
             >
               <Input
                 id="codigo_barras"
+                inputMode="numeric"
                 placeholder="7891000100001"
                 value={form.codigo_barras}
                 invalid={Boolean(erros.codigo_barras)}
-                onChange={(e) => atualizar('codigo_barras', e.target.value)}
+                onChange={(e) => atualizar('codigo_barras', onlyDigits(e.target.value).slice(0, 14))}
               />
             </Field>
 

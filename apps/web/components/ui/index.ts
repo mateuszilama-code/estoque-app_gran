@@ -5,5 +5,6 @@ export { Textarea } from './Textarea';
 export { Select } from './Select';
 export { Table } from './Table';
 export type { Column } from './Table';
+export { Pagination } from './Pagination';
 export { Modal } from './Modal';
 export { ToastProvider, useToast } from './Toast';

@@ -4,7 +4,7 @@
 > Aplicação full-stack para cadastro e gestão de **Fornecedores**, **Produtos** e da
 > **associação (N:N) entre Produto e Fornecedor**.
 
-![status](https://img.shields.io/badge/status-em%20desenvolvimento-yellow)
+![status](https://img.shields.io/badge/status-MVP%20completo-brightgreen)
 ![stack](https://img.shields.io/badge/stack-NestJS%20%7C%20Next.js%20%7C%20SQLite-blue)
 
 ---
@@ -148,7 +148,7 @@ Telas: **/fornecedores**, **/produtos** e **/produtos/[id]/fornecedores** (assoc
 
 ## Status do Projeto
 
-**Etapa atual:** `Etapa 7 — Scaffold do frontend (Next.js)` ✅ · **Backend completo** 🎉
+**Etapa atual:** `Etapa 8 — Telas integradas à API` ✅ · **MVP completo** 🎉
 
 | Área | Situação |
 | ---- | -------- |
@@ -160,7 +160,7 @@ Telas: **/fornecedores**, **/produtos** e **/produtos/[id]/fornecedores** (assoc
 | 📦 Módulo Produto (CRUD + validações) | ✅ Concluída |
 | 🔗 Módulo Associação Produto/Fornecedor (N:N) | ✅ Concluída |
 | 🖥️ Frontend — scaffold Next.js + design system | ✅ Concluída |
-| 🧩 Telas (Fornecedor, Produto, Associação) | 🚧 Scaffold pronto (refinamento na Etapa 8) |
+| 🧩 Telas (Fornecedor, Produto, Associação) | ✅ Concluída |
 
 > O histórico detalhado e datado de cada etapa é mantido em
 > [docs/00-visao-geral.md](docs/00-visao-geral.md).

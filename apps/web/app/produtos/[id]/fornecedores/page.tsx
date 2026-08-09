@@ -2,10 +2,20 @@
 
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import { Button, Select, Table, useToast, type Column } from '@/components/ui';
 import { ApiError, api } from '@/lib/api';
 import type { Fornecedor, Produto } from '@/lib/types';
+
+/** Item de uma lista de descrição (rótulo + valor) para os detalhes read-only. */
+function DetalheItem({ termo, children }: { termo: string; children: ReactNode }) {
+  return (
+    <div className="dl__item">
+      <span className="dl__term">{termo}</span>
+      <span className="dl__desc">{children}</span>
+    </div>
+  );
+}
 
 export default function ProdutoFornecedoresPage() {
   const params = useParams<{ id: string }>();
@@ -84,6 +94,7 @@ export default function ProdutoFornecedoresPage() {
     { header: 'Empresa', cell: (f) => <strong>{f.nome_empresa}</strong> },
     { header: 'CNPJ', cell: (f) => <span className="mono">{f.cnpj}</span> },
     { header: 'Contato', cell: (f) => f.contato_principal },
+    { header: 'Telefone', cell: (f) => f.telefone },
     {
       header: 'Ações',
       align: 'right',
@@ -104,9 +115,7 @@ export default function ProdutoFornecedoresPage() {
           <p className="page-header__subtitle" style={{ marginBottom: 4 }}>
             <Link href="/produtos">← Produtos</Link>
           </p>
-          <h1 className="page-header__title">
-            Fornecedores {produto ? `de ${produto.nome}` : ''}
-          </h1>
+          <h1 className="page-header__title">Fornecedores {produto ? `de ${produto.nome}` : ''}</h1>
           <p className="page-header__subtitle">
             Associe ou desassocie fornecedores deste produto (relação muitos-para-muitos).
           </p>
@@ -128,12 +137,30 @@ export default function ProdutoFornecedoresPage() {
         </div>
       ) : (
         <div className="stack">
+          {produto && (
+            <div className="card card--pad">
+              <h2 style={{ fontSize: 'var(--fs-md)', marginBottom: 16 }}>Detalhes do produto</h2>
+              <div className="dl">
+                <DetalheItem termo="Nome">{produto.nome}</DetalheItem>
+                <DetalheItem termo="Categoria">
+                  <span className="badge">{produto.categoria}</span>
+                </DetalheItem>
+                <DetalheItem termo="Código de barras">
+                  <span className="mono">{produto.codigo_barras ?? '—'}</span>
+                </DetalheItem>
+                <DetalheItem termo="Estoque">{produto.quantidade_estoque}</DetalheItem>
+                <DetalheItem termo="Validade">{produto.data_validade ?? '—'}</DetalheItem>
+                <DetalheItem termo="Descrição">{produto.descricao}</DetalheItem>
+              </div>
+            </div>
+          )}
+
           <div className="card card--pad">
             <h2 style={{ fontSize: 'var(--fs-md)', marginBottom: 12 }}>Associar fornecedor</h2>
             <div className="row" style={{ alignItems: 'flex-end' }}>
               <div style={{ flex: '1 1 260px' }}>
                 <Select
-                  aria-label="Fornecedor"
+                  aria-label="Selecionar fornecedor"
                   placeholder={disponiveis.length ? 'Selecione um fornecedor…' : 'Nenhum disponível'}
                   value={selecionado}
                   disabled={disponiveis.length === 0}
@@ -142,7 +169,7 @@ export default function ProdutoFornecedoresPage() {
                 />
               </div>
               <Button onClick={associar} disabled={!selecionado} loading={associando}>
-                Associar
+                Associar fornecedor
               </Button>
             </div>
             {disponiveis.length === 0 && todos.length > 0 && (
@@ -158,13 +185,18 @@ export default function ProdutoFornecedoresPage() {
             )}
           </div>
 
-          <Table
-            columns={columns}
-            rows={associados}
-            keyField={(f) => f.id}
-            emptyTitle="Nenhum fornecedor associado"
-            emptyHint="Use o seletor acima para associar um fornecedor."
-          />
+          <div>
+            <h2 style={{ fontSize: 'var(--fs-md)', marginBottom: 12 }}>
+              Fornecedores associados ({associados.length})
+            </h2>
+            <Table
+              columns={columns}
+              rows={associados}
+              keyField={(f) => f.id}
+              emptyTitle="Nenhum fornecedor associado"
+              emptyHint="Use o seletor acima para associar um fornecedor."
+            />
+          </div>
         </div>
       )}
     </>

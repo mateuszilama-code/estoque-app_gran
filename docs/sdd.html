@@ -144,9 +144,9 @@
     <p class="subtitle">Sistema de Controle de Estoque — Projeto Integrador Full Stack (Fase 2)</p>
     <div class="meta-grid">
       <div><span>Projeto</span><strong>Controle de Estoque</strong></div>
-      <div><span>Versão do SDD</span><strong>0.8</strong></div>
+      <div><span>Versão do SDD</span><strong>0.9</strong></div>
       <div><span>Última atualização</span><strong>2026-08-09</strong></div>
-      <div><span>Etapa</span><strong>7 — Scaffold do frontend</strong></div>
+      <div><span>Etapa</span><strong>8 — Telas (MVP completo)</strong></div>
     </div>
   </header>
 
@@ -275,8 +275,15 @@
       <strong>Backend funcionalmente completo <span class="badge done">Etapa 6</span>.</strong> As
       <strong>três features</strong> do escopo (Fornecedor, Produto e Associação) estão implementadas,
       validadas e documentadas na Swagger UI (tags <code>fornecedores</code>, <code>produtos</code> e
-      <code>associacao</code>), com testes unitários (5 suítes, 43 testes). O próximo passo é o
-      <strong>frontend</strong> (Etapa 7 — scaffold do Next.js) e as telas (Etapa 8).
+      <code>associacao</code>), com testes unitários (5 suítes, 43 testes).
+    </div>
+
+    <div class="callout" style="border-color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, transparent);">
+      <strong>🎉 MVP funcionalmente completo <span class="badge done">Etapa 8</span>.</strong> Com as
+      três telas do frontend (Fornecedor, Produto e Associação) integradas à API — com máscaras,
+      validação client-side espelhando o backend, busca/paginação e mensagens fiéis aos cenários do
+      desafio — o <strong>MVP full-stack (frontend + backend)</strong> está funcional. Detalhes de
+      arquitetura de telas e design system na seção <a href="#frontend">6. Frontend</a>.
     </div>
   </section>
 
@@ -577,10 +584,19 @@
       <code>CORS_ORIGIN</code>). O frontend roda na porta <strong>3001</strong> (a API usa a 3000).
     </p>
 
+    <h3>6.4 Telas integradas <span class="badge done">Etapa 8</span></h3>
+    <p>
+      As três telas foram integradas à API e refinadas: <strong>máscaras</strong> de CNPJ e telefone,
+      <strong>validação client-side espelhando o backend</strong> (mesmos formatos e mensagens),
+      <strong>erros por campo</strong>, <strong>busca + paginação</strong> nas listas e a tela de
+      associação com <strong>detalhes read-only</strong> do produto. Toasts refletem os cenários do
+      desafio (sucesso, conflito e associação/desassociação).
+    </p>
+
     <div class="callout">
-      <strong>Scaffold do frontend concluído <span class="badge done">Etapa 7</span>.</strong> Build
-      de produção (Next 15) e lint/type-check verdes; telas servidas e integração com a API validada
-      (CORS + rotas respondendo). O refinamento das telas segue na Etapa 8.
+      <strong>Frontend concluído <span class="badge done">Etapas 7–8</span>.</strong> Scaffold (Next 15
+      + design system) e as três telas integradas à API. Build de produção e lint/type-check verdes;
+      rotas servidas e integração validada (CORS). Junto ao backend, fecha o <strong>MVP</strong>.
     </div>
   </section>
 
@@ -656,6 +672,14 @@
           <td>Nova seção <strong>6. Frontend</strong>: arquitetura de telas (Next.js App Router),
             design system (tokens + componentes) e integração com a API (client <code>fetch</code> via
             <code>NEXT_PUBLIC_API_URL</code> + CORS no backend). Seção de Revisões renumerada para 7.</td>
+        </tr>
+        <tr>
+          <td>2026-08-09</td>
+          <td>8 — Telas integradas (MVP)</td>
+          <td>0.9</td>
+          <td>Escopo (Seção 2) marcado como <strong>MVP funcionalmente completo</strong>
+            (frontend + backend). Seção 6 (Frontend) atualizada com as três telas integradas
+            (máscaras, validação client-side, busca/paginação, detalhes na associação).</td>
         </tr>
       </tbody>
     </table>

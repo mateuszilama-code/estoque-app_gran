@@ -72,17 +72,17 @@ detalhamento e um commit no padrão *Conventional Commits*.
 | **5** | 2026-08-09 | Módulo de Produto completo em `apps/api`: entity, DTOs validados (`categoria` como enum *Eletrônicos/Alimentos/Vestuário/Outro*), service com regra de **código de barras único** (quando informado) e CRUD REST documentado na Swagger UI (tag `produtos`). Testes: 34 verdes no total. CRUD validado por `curl` (201/409/400/404/204). | `docs/05-modulo-produto.md` | `feat(api): CRUD de produto com validacoes e documentacao swagger` |
 | **6** | 2026-08-09 | Módulo de Associação (N:N) completo em `apps/api`: model de junção `ProdutoFornecedor` + `belongsToMany` nas entities; endpoints de associar (bloqueando duplicidade), desassociar e listar (fornecedores↔produtos) sob a tag `associacao`. **Backend funcionalmente completo** (3 features). Testes: 43 verdes no total. Fluxo N:N validado por `curl` (201/409/200/404/400). | `docs/06-modulo-associacao.md` | `feat(api): associacao muitos-para-muitos entre produto e fornecedor` |
 | **7** | 2026-08-09 | Scaffold do frontend em `apps/web`: Next.js 15 (App Router) + TS/ESLint/Prettier; design system mínimo (tokens + Button/Input/Select/Modal/Toast/Table); client HTTP tipado consumindo `NEXT_PUBLIC_API_URL`; telas `/fornecedores`, `/produtos` e `/produtos/[id]/fornecedores`. CORS habilitado na API. Build/lint verdes e rotas servidas (porta 3001). | `docs/07-scaffold-frontend.md` | `chore(web): scaffold Next.js com design system inicial` |
-| 8 | — | Telas de Fornecedor, Produto e Associação. | `docs/08-telas-frontend.md` | *pendente* |
+| **8** | 2026-08-09 | Telas de Fornecedor, Produto e Associação integradas à API: máscaras (CNPJ/telefone), **validação client-side espelhando o backend**, erros por campo, busca + paginação, e a associação com detalhes read-only do produto. Responsividade e acessibilidade mínimas. **MVP full-stack funcionalmente completo.** Build/lint verdes. | `docs/08-telas-frontend.md` | `feat(web): telas de fornecedor, produto e associacao integradas a api` |
 | 9 | — | Consolidação final da documentação. | — | *pendente* |
 
 ---
 
 ## 4. Próximos Passos
 
-- **Backend concluído** (Etapas 2–6) e **frontend scaffoldado** (Etapa 7): as três telas consomem a
-  API REST documentada.
-- **Etapa 8:** refinamento das telas (edição, busca/filtros, paginação e polimento de UX),
-  consolidando a integração frontend ↔ API.
+- **MVP full-stack completo** (Etapas 2–8): backend (3 features + API documentada na Swagger) e
+  frontend (3 telas integradas, com validação, busca/paginação e feedback ao usuário).
+- **Etapa 9 (opcional):** consolidação final da documentação; possíveis evoluções — edição inline,
+  filtros avançados, testes de componente/E2E e deploy.
 
 > Este documento deve ser atualizado ao final de cada etapa: nova linha no *Histórico de Etapas*
 > (com data, resumo, `.md` e commit) e ajuste dos *Próximos Passos*.
