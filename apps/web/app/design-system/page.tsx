@@ -1,7 +1,15 @@
 'use client';
 
 import { useState, type ReactNode } from 'react';
-import { AlertTriangle, PackageX, Plus, Truck, Package } from 'lucide-react';
+import {
+  AlertTriangle,
+  ArrowUpDown,
+  PackageX,
+  Plus,
+  SlidersHorizontal,
+  Truck,
+  Package,
+} from 'lucide-react';
 
 import { Header } from '@/components/layout/Header';
 import { StatCard, StatCardGrid } from '@/components/layout/StatCard';
@@ -115,8 +123,13 @@ export default function DesignSystemPage() {
         onSearchChange={setBusca}
         actions={
           <>
+            <Button variant="outline" size="sm" className="hidden sm:inline-flex">
+              <ArrowUpDown aria-hidden />
+              Ordenar
+            </Button>
             <Button variant="outline" size="sm">
-              Secundária
+              <SlidersHorizontal aria-hidden />
+              <span className="hidden sm:inline">Filtrar</span>
             </Button>
             <Button size="sm">
               <Plus aria-hidden />

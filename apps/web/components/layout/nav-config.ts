@@ -1,4 +1,4 @@
-import { Boxes, LayoutDashboard, Package, Palette, type LucideIcon } from 'lucide-react';
+import { Boxes, LayoutDashboard, Link2, Package, Palette, type LucideIcon } from 'lucide-react';
 
 export interface NavItem {
   href: string;
@@ -14,21 +14,17 @@ export interface NavSection {
   items: NavItem[];
 }
 
-/**
- * Navegação da sidebar.
- *
- * A tela de Associação Produto/Fornecedor não aparece aqui porque não tem rota
- * própria: ela é acessada a partir de um produto (`/produtos/[id]/fornecedores`).
- */
+/** Navegação da sidebar — fonte única para a barra fixa e para o drawer mobile. */
 export const NAV_SECTIONS: NavSection[] = [
   {
     items: [{ href: '/', label: 'Início', icon: LayoutDashboard }],
   },
   {
-    title: 'Cadastros',
+    title: 'Gestão',
     items: [
       { href: '/produtos', label: 'Produtos', icon: Package, matchNested: true },
       { href: '/fornecedores', label: 'Fornecedores', icon: Boxes, matchNested: true },
+      { href: '/associacao', label: 'Associação', icon: Link2 },
     ],
   },
   {
@@ -37,7 +33,13 @@ export const NAV_SECTIONS: NavSection[] = [
   },
 ];
 
-/** Regra única de "rota ativa", compartilhada por sidebar e drawer mobile. */
+/**
+ * Regra única de "rota ativa", compartilhada por sidebar e drawer.
+ *
+ * `/produtos/[id]/fornecedores` é a tela de associação a partir de um produto:
+ * ela mantém **Produtos** ativo (é uma subrota) — o item "Associação" leva ao
+ * ponto de entrada dessa mesma funcionalidade.
+ */
 export function isNavItemActive(item: NavItem, pathname: string): boolean {
   if (item.href === '/') return pathname === '/';
   return item.matchNested ? pathname.startsWith(item.href) : pathname === item.href;

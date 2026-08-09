@@ -10,17 +10,17 @@ import { cn } from '@/lib/utils';
 import { NAV_SECTIONS, isNavItemActive, type NavItem } from './nav-config';
 
 interface SidebarContextValue {
-  /** Sidebar em modo apenas-ícone (desktop). */
+  /** Preferência do usuário: manter a barra em trilho mesmo no desktop (lg+). */
   collapsed: boolean;
   toggleCollapsed: () => void;
-  /** Drawer de navegação (mobile). */
+  /** Drawer de navegação (abaixo de md). */
   mobileOpen: boolean;
   setMobileOpen: (open: boolean) => void;
 }
 
 const SidebarContext = createContext<SidebarContextValue | null>(null);
 
-/** Estado da navegação, compartilhado entre a Sidebar, o Header e o drawer mobile. */
+/** Estado da navegação, compartilhado entre a Sidebar, o AppShell e o drawer. */
 export function SidebarProvider({ children }: { children: ReactNode }) {
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -41,16 +41,70 @@ export function useSidebar(): SidebarContextValue {
   return context;
 }
 
-/** Largura da sidebar em cada estado — usada também pelo padding do conteúdo. */
-export const SIDEBAR_WIDTH = { expanded: '15rem', collapsed: '4.5rem' } as const;
+/**
+ * Larguras da barra e o padding correspondente do conteúdo — declarados juntos
+ * para que os dois nunca saiam de sincronia.
+ */
+export const SIDEBAR = {
+  rail: 'w-[4.5rem]', // 72px — modo trilho (só ícones)
+  expanded: 'w-60', // 240px — expandida, com rótulos
+  contentRail: 'md:pl-[4.5rem]',
+  contentExpanded: 'lg:pl-60',
+} as const;
+
+/**
+ * Classes que revelam/escondem os rótulos conforme o modo da barra.
+ *
+ * A decisão é feita **em CSS** (media query + `hover`/`focus-within`), não em
+ * JavaScript: nada de `matchMedia`, então não há divergência de hidratação nem
+ * piscada de layout no primeiro render. A regra é sempre a mesma:
+ * escondido no trilho → visível ao passar o mouse, ao focar por teclado, ou a
+ * partir de `lg` quando a barra não está recolhida por escolha do usuário.
+ */
+function revealClasses(collapsed: boolean) {
+  return {
+    /** Rótulos em linha (texto ao lado do ícone). */
+    label: cn(
+      'hidden group-hover/sidebar:inline group-focus-within/sidebar:inline',
+      !collapsed && 'lg:inline',
+    ),
+    /** Blocos (títulos de seção). */
+    block: cn(
+      'hidden group-hover/sidebar:block group-focus-within/sidebar:block',
+      !collapsed && 'lg:block',
+    ),
+    /** Elemento que só existe no trilho (separador no lugar do título). */
+    railOnly: cn(
+      'block group-hover/sidebar:hidden group-focus-within/sidebar:hidden',
+      !collapsed && 'lg:hidden',
+    ),
+    /** Linha de item: centralizada no trilho, alinhada à esquerda quando expandida. */
+    row: cn(
+      'justify-center px-0',
+      'group-hover/sidebar:justify-start group-hover/sidebar:px-3',
+      'group-focus-within/sidebar:justify-start group-focus-within/sidebar:px-3',
+      !collapsed && 'lg:justify-start lg:px-3',
+    ),
+  };
+}
+
+type Reveal = ReturnType<typeof revealClasses>;
+
+/** Variante do drawer: sempre expandida, sem depender de hover. */
+const REVEAL_FULL: Reveal = {
+  label: '',
+  block: '',
+  railOnly: 'hidden',
+  row: 'px-3',
+};
 
 function NavLink({
   item,
-  collapsed,
+  reveal,
   onNavigate,
 }: {
   item: NavItem;
-  collapsed: boolean;
+  reveal: Reveal;
   onNavigate?: () => void;
 }) {
   const pathname = usePathname();
@@ -62,10 +116,12 @@ function NavLink({
       href={item.href}
       onClick={onNavigate}
       aria-current={active ? 'page' : undefined}
-      title={collapsed ? item.label : undefined}
+      // O rótulo visível some no modo trilho (`display:none` sai da árvore de
+      // acessibilidade), então o nome acessível vem sempre do aria-label.
+      aria-label={item.label}
       className={cn(
-        'relative flex h-9 items-center gap-3 rounded-md px-3 text-body transition-colors',
-        collapsed && 'justify-center px-0',
+        'relative flex h-9 items-center gap-3 rounded-md text-body transition-colors',
+        reveal.row,
         active
           ? 'bg-sidebar-active/10 font-medium text-sidebar-active-foreground'
           : 'text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-active-foreground',
@@ -78,53 +134,54 @@ function NavLink({
         />
       )}
       <Icon className="size-4 shrink-0" aria-hidden />
-      {!collapsed && <span className="truncate">{item.label}</span>}
+      <span aria-hidden className={cn('truncate', reveal.label)}>
+        {item.label}
+      </span>
     </Link>
   );
 }
 
-function SidebarContent({
-  collapsed,
-  onNavigate,
-}: {
-  collapsed: boolean;
-  onNavigate?: () => void;
-}) {
-  const { toggleCollapsed } = useSidebar();
+function SidebarContent({ reveal, onNavigate }: { reveal: Reveal; onNavigate?: () => void }) {
+  const { collapsed, toggleCollapsed } = useSidebar();
 
   return (
-    <div className="flex h-full flex-col bg-sidebar">
+    <div className="flex h-full flex-col overflow-hidden bg-sidebar">
       {/* Marca */}
-      <div
-        className={cn(
-          'flex h-16 shrink-0 items-center gap-2.5 border-b border-sidebar-border px-4',
-          collapsed && 'justify-center px-0',
-        )}
-      >
-        <span className="grid size-8 shrink-0 place-items-center rounded-md bg-sidebar-active/10 text-sidebar-active-foreground">
-          <Package className="size-4" aria-hidden />
-        </span>
-        {!collapsed && (
-          <span className="truncate font-medium text-sidebar-active-foreground">Estoque</span>
-        )}
+      <div className="shrink-0 border-b border-sidebar-border px-3">
+        <div className={cn('flex h-16 items-center gap-2.5', reveal.row)}>
+          <span className="grid size-8 shrink-0 place-items-center rounded-md bg-sidebar-active/10 text-sidebar-active-foreground">
+            <Package className="size-4" aria-hidden />
+          </span>
+          <span className={cn('truncate font-medium text-sidebar-active-foreground', reveal.label)}>
+            Estoque
+          </span>
+        </div>
       </div>
 
       {/* Navegação */}
       <nav aria-label="Navegação principal" className="flex-1 overflow-y-auto px-3 py-4">
         {NAV_SECTIONS.map((section, index) => (
           <div key={section.title ?? `secao-${index}`} className={cn(index > 0 && 'mt-6')}>
-            {section.title && !collapsed && (
-              <p className="mb-2 px-3 text-caption font-medium uppercase text-sidebar-muted">
-                {section.title}
-              </p>
-            )}
-            {section.title && collapsed && (
-              <div aria-hidden className="mx-3 mb-2 h-px bg-sidebar-border" />
+            {section.title && (
+              <>
+                <p
+                  className={cn(
+                    'mb-2 truncate px-3 text-caption font-medium uppercase text-sidebar-muted',
+                    reveal.block,
+                  )}
+                >
+                  {section.title}
+                </p>
+                <div
+                  aria-hidden
+                  className={cn('mx-3 mb-2 h-px bg-sidebar-border', reveal.railOnly)}
+                />
+              </>
             )}
             <ul className="flex flex-col gap-0.5">
               {section.items.map((item) => (
                 <li key={item.href}>
-                  <NavLink item={item} collapsed={collapsed} onNavigate={onNavigate} />
+                  <NavLink item={item} reveal={reveal} onNavigate={onNavigate} />
                 </li>
               ))}
             </ul>
@@ -138,22 +195,25 @@ function SidebarContent({
           href={`${process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3000'}/docs`}
           target="_blank"
           rel="noreferrer"
-          title={collapsed ? 'Documentação da API' : undefined}
+          aria-label="Documentação da API"
           className={cn(
-            'flex h-9 items-center gap-3 rounded-md px-3 text-body text-sidebar-foreground transition-colors hover:bg-sidebar-accent hover:text-sidebar-active-foreground',
-            collapsed && 'justify-center px-0',
+            'flex h-9 items-center gap-3 rounded-md text-body text-sidebar-foreground transition-colors hover:bg-sidebar-accent hover:text-sidebar-active-foreground',
+            reveal.row,
           )}
         >
           <ExternalLink className="size-4 shrink-0" aria-hidden />
-          {!collapsed && <span className="truncate">Documentação da API</span>}
+          <span aria-hidden className={cn('truncate', reveal.label)}>
+            Documentação da API
+          </span>
         </a>
         <button
           type="button"
           onClick={toggleCollapsed}
           aria-label={collapsed ? 'Expandir menu lateral' : 'Recolher menu lateral'}
+          aria-pressed={collapsed}
           className={cn(
-            'hidden h-9 w-full items-center gap-3 rounded-md px-3 text-body text-sidebar-muted transition-colors hover:bg-sidebar-accent hover:text-sidebar-active-foreground lg:flex',
-            collapsed && 'justify-center px-0',
+            'hidden h-9 w-full items-center gap-3 rounded-md text-body text-sidebar-muted transition-colors hover:bg-sidebar-accent hover:text-sidebar-active-foreground lg:flex',
+            reveal.row,
           )}
         >
           {collapsed ? (
@@ -161,28 +221,44 @@ function SidebarContent({
           ) : (
             <PanelLeftClose className="size-4 shrink-0" aria-hidden />
           )}
-          {!collapsed && <span className="truncate">Recolher</span>}
+          <span aria-hidden className={cn('truncate', reveal.label)}>
+            Recolher
+          </span>
         </button>
       </div>
     </div>
   );
 }
 
-/** Sidebar escura fixa (lg+), com estado expandido/colapsado. */
+/**
+ * Barra lateral escura fixa, a partir de `md`.
+ *
+ * - `md` (768–1023px): trilho de 72px; expande para 240px ao passar o mouse ou
+ *   ao receber foco, sobrepondo o conteúdo (o padding do conteúdo não muda).
+ * - `lg+` (≥1024px): expandida por padrão; o botão "Recolher" a leva ao mesmo
+ *   trilho, que também expande no hover.
+ */
 export function Sidebar() {
   const { collapsed } = useSidebar();
+  const reveal = revealClasses(collapsed);
 
   return (
     <aside
-      className="fixed inset-y-0 left-0 z-30 hidden border-r border-sidebar-border transition-[width] duration-200 lg:block"
-      style={{ width: collapsed ? SIDEBAR_WIDTH.collapsed : SIDEBAR_WIDTH.expanded }}
+      className={cn(
+        'group/sidebar fixed inset-y-0 left-0 z-30 hidden border-r border-sidebar-border bg-sidebar transition-[width] duration-200 md:block',
+        SIDEBAR.rail,
+        'hover:w-60 focus-within:w-60',
+        // A sobreposição só existe no modo trilho; expandida, dispensa sombra.
+        'hover:shadow-overlay focus-within:shadow-overlay',
+        !collapsed && 'lg:w-60 lg:hover:shadow-none lg:focus-within:shadow-none',
+      )}
     >
-      <SidebarContent collapsed={collapsed} />
+      <SidebarContent reveal={reveal} />
     </aside>
   );
 }
 
-/** Mesma navegação como drawer, para telas menores que lg. */
+/** A mesma navegação como drawer, abaixo de `md`. */
 export function SidebarMobile() {
   const { mobileOpen, setMobileOpen } = useSidebar();
 
@@ -190,13 +266,16 @@ export function SidebarMobile() {
     <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
       <SheetContent
         side="left"
-        className="w-60 border-sidebar-border bg-sidebar p-0 text-sidebar-foreground"
+        className={cn(
+          'border-sidebar-border bg-sidebar p-0 text-sidebar-foreground',
+          SIDEBAR.expanded,
+        )}
       >
         <SheetTitle className="sr-only">Navegação principal</SheetTitle>
         <SheetDescription className="sr-only">
-          Acesso às telas de produtos, fornecedores e documentação da API.
+          Acesso às telas de produtos, fornecedores, associação e documentação da API.
         </SheetDescription>
-        <SidebarContent collapsed={false} onNavigate={() => setMobileOpen(false)} />
+        <SidebarContent reveal={REVEAL_FULL} onNavigate={() => setMobileOpen(false)} />
       </SheetContent>
     </Sheet>
   );

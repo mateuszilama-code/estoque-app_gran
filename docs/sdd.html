@@ -144,9 +144,9 @@
     <p class="subtitle">Sistema de Controle de Estoque — Projeto Integrador Full Stack (Fase 2)</p>
     <div class="meta-grid">
       <div><span>Projeto</span><strong>Controle de Estoque</strong></div>
-      <div><span>Versão do SDD</span><strong>1.0</strong></div>
+      <div><span>Versão do SDD</span><strong>1.1</strong></div>
       <div><span>Última atualização</span><strong>2026-08-09</strong></div>
-      <div><span>Etapa</span><strong>9 — Design System (fundação)</strong></div>
+      <div><span>Etapa</span><strong>10 — Layout shell responsivo</strong></div>
     </div>
   </header>
 
@@ -727,11 +727,66 @@
       drawer.
     </p>
 
+    <h3>7.6 Comportamento Responsivo <span class="badge done">Etapa 10</span></h3>
+    <p>
+      A casca tem <strong>três estados</strong>, resolvidos em CSS (media query + <code>hover</code> +
+      <code>focus-within</code>) e não em JavaScript — não há <code>matchMedia</code>, portanto não há
+      divergência de hidratação nem salto de layout no primeiro render. O único estado em JS é a
+      preferência do usuário de recolher a barra, que só existe a partir de <code>lg</code>.
+    </p>
+    <table>
+      <thead><tr><th>Dispositivo</th><th>Sidebar</th><th>Header</th><th>Conteúdo</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>Mobile</strong><br><small>&lt; 768px</small></td>
+          <td>Fora do fluxo; barra escura de 56px no topo com botão de menu. A navegação abre como
+            <strong>drawer</strong> (<code>Sheet</code>) de 240px e fecha ao escolher um item</td>
+          <td>Título em linha própria, ações à direita na linha seguinte, busca em largura total.
+            Gruda em <code>top-14</code> para não cobrir a barra escura</td>
+          <td><code>px-4</code> (16px), coluna única</td>
+        </tr>
+        <tr>
+          <td><strong>Tablet</strong><br><small>768–1023px</small></td>
+          <td><strong>Trilho</strong> fixo de 72px (só ícones); expande para 240px no hover ou no
+            foco por teclado, sobrepondo o conteúdo</td>
+          <td>Título · busca na primeira linha; ações descem para a segunda quando não cabem</td>
+          <td><code>sm:px-6</code> (24px), deslocado 72px</td>
+        </tr>
+        <tr>
+          <td><strong>Desktop</strong><br><small>≥ 1024px</small></td>
+          <td><strong>Expandida</strong> (240px) com rótulos e títulos de seção; o botão "Recolher"
+            a leva ao mesmo trilho de 72px</td>
+          <td>Título · busca · ações na mesma linha</td>
+          <td><code>lg:px-8</code> (32px), máx. 1600px, deslocado 240px (ou 72px)</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>
+      <strong>Critérios dos cortes:</strong> abaixo de 768px um trilho de 72px custaria 19% da largura
+      de um celular de 375px, então a navegação vira drawer; entre 768 e 1023px uma barra de 240px
+      deixaria só 528px para tabelas densas, daí o trilho; a partir de 1024px sobram 784px de
+      conteúdo mesmo com a barra expandida, e o rótulo ao lado do ícone passa a compensar.
+    </p>
+    <p>
+      <strong>Acessibilidade do trilho:</strong> como o rótulo some com <code>display:none</code> (o
+      que também o remove da árvore de acessibilidade), todo item de navegação carrega
+      <code>aria-label</code> e o texto visível é <code>aria-hidden</code>. A barra expande também no
+      <code>focus-within</code>, para quem navega por teclado.
+    </p>
+    <p>
+      O layout foi <strong>verificado em 375, 768, 1024 e 1280px</strong> com Chrome headless dirigido
+      por CDP (<code>Emulation.setDeviceMetricsOverride</code>, que dá o viewport CSS exato). A
+      verificação encontrou e corrigiu um defeito em 768px: busca e três botões espremiam o título até
+      duas letras — o bloco do título ganhou largura mínima, de modo que as ações quebram para a linha
+      de baixo em vez de esmagá-lo.
+    </p>
+
     <div class="callout">
-      <strong>Fundação do design system concluída <span class="badge done">Etapa 9</span>.</strong>
+      <strong>Fundação do design system concluída <span class="badge done">Etapa 9</span> e casca
+      responsiva validada <span class="badge done">Etapa 10</span>.</strong>
       Tokens, 10 componentes do shadcn/ui e 4 componentes de layout próprios, com a casca do
-      dashboard montada. Build, lint e type-check verdes. As telas de Produtos, Fornecedores e
-      Associação serão reconstruídas sobre esta base nas etapas seguintes.
+      dashboard funcionando nos três tamanhos de tela. Build, lint e type-check verdes. As telas de
+      Produtos, Fornecedores e Associação serão reconstruídas sobre esta base nas etapas seguintes.
     </div>
   </section>
 
@@ -824,6 +879,16 @@
             lucide + sonner + Inter), tabelas de tokens (cores, tipografia, espaçamento, raio, sombra
             e movimento) e inventário de componentes (shadcn/ui, próprios e legado). Seção 6 ganhou a
             subseção <strong>6.5 Redesign</strong>. Seção de Revisões renumerada para 8.</td>
+        </tr>
+        <tr>
+          <td>2026-08-09</td>
+          <td>10 — Layout shell responsivo</td>
+          <td>1.1</td>
+          <td>Nova subseção <strong>7.6 Comportamento Responsivo</strong>: tabela
+            Dispositivo × Sidebar × Header × Conteúdo, critérios de cada breakpoint, decisão de
+            resolver os três estados em CSS (sem <code>matchMedia</code>) e acessibilidade do modo
+            trilho. Registrada a validação em 375/768/1024/1280px e a correção do cabeçalho em
+            tablet. Rota <code>/associacao</code> adicionada à navegação.</td>
         </tr>
       </tbody>
     </table>

@@ -75,7 +75,8 @@ detalhamento e um commit no padrão *Conventional Commits*.
 | **7** | 2026-08-09 | Scaffold do frontend em `apps/web`: Next.js 15 (App Router) + TS/ESLint/Prettier; design system mínimo (tokens + Button/Input/Select/Modal/Toast/Table); client HTTP tipado consumindo `NEXT_PUBLIC_API_URL`; telas `/fornecedores`, `/produtos` e `/produtos/[id]/fornecedores`. CORS habilitado na API. Build/lint verdes e rotas servidas (porta 3001). | `docs/07-scaffold-frontend.md` | `chore(web): scaffold Next.js com design system inicial` |
 | **8** | 2026-08-09 | Telas de Fornecedor, Produto e Associação integradas à API: máscaras (CNPJ/telefone), **validação client-side espelhando o backend**, erros por campo, busca + paginação, e a associação com detalhes read-only do produto. Responsividade e acessibilidade mínimas. **MVP full-stack funcionalmente completo.** Build/lint verdes. | `docs/08-telas-frontend.md` | `feat(web): telas de fornecedor, produto e associacao integradas a api` |
 | **9** | 2026-08-09 | **Fundação do design system** do frontend, inspirada em um dashboard admin: Tailwind CSS + shadcn/ui instalados e configurados; tokens de cor/tipografia/espaçamento/raio/sombra em `tailwind.config.ts` + `globals.css`; 10 componentes gerados via shadcn/ui e 4 de layout próprios (`AppShell`, `Sidebar`, `Header`, `StatCard`); casca com **sidebar escura fixa** + conteúdo claro; vitrine em `/design-system`. Componentes da Etapa 7 isolados em `components/legacy/` — as 3 telas seguem funcionando. Build/lint/type-check verdes. | `docs/09-design-system.md` | `feat(web): fundacao do design system com tailwind e shadcn/ui` |
-| 10 | — | Layout shell responsivo (validação nos 3 breakpoints) e reconstrução das telas sobre o design system. | — | *pendente* |
+| **10** | 2026-08-09 | **Layout shell responsivo** com três estados de navegação resolvidos em CSS (drawer < 768px · trilho de 72px que expande no hover/foco entre 768–1023px · sidebar de 240px recolhível a partir de 1024px); `Header` com busca, botões secundários e ação primária; conteúdo com padding progressivo e máx. 1600px; nova rota `/associacao`. Validado em 375/768/1024/1280px com Chrome headless via CDP — corrigido o esmagamento do título no tablet. Build/lint/type-check verdes (8 rotas). | `docs/10-layout-responsivo.md` | `feat(web): layout shell responsivo (sidebar, header, conteudo)` |
+| 11 | — | Tela de Lista de Produtos com dados mockados (StatCards, tabela com badges de status, cards no mobile, busca/filtro/paginação). | — | *pendente* |
 
 ---
 
@@ -83,11 +84,11 @@ detalhamento e um commit no padrão *Conventional Commits*.
 
 - **MVP full-stack completo** (Etapas 2–8): backend (3 features + API documentada na Swagger) e
   frontend (3 telas integradas, com validação, busca/paginação e feedback ao usuário).
-- **Redesign do frontend em andamento** (a partir da Etapa 9): a fundação do design system está
-  pronta (tokens + componentes + casca do dashboard); as telas ainda usam o CSS da Etapa 7.
-- **Etapa 10:** validar o layout shell nos três breakpoints (mobile ~375px, tablet ~768px, desktop
-  ~1280px) e reconstruir Produtos, Fornecedores e Associação sobre o design system, removendo
-  `components/legacy/`.
+- **Redesign do frontend em andamento** (a partir da Etapa 9): design system e **casca responsiva
+  validada** estão prontos; as três telas de negócio ainda usam o CSS da Etapa 7.
+- **Etapa 11:** reconstruir a Lista de Produtos sobre o design system (StatCards, tabela com badges
+  de status, cards empilhados no mobile, busca/filtro/paginação, skeleton e estado vazio), depois a
+  de Fornecedores e a de Associação — removendo `components/legacy/` ao final.
 - **Depois:** consolidação final da documentação; possíveis evoluções — edição inline, filtros
   avançados, testes de componente/E2E e deploy.
 
