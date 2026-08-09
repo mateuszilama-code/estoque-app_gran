@@ -1,6 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { CreationOptional, InferAttributes, InferCreationAttributes } from 'sequelize';
-import { Column, CreatedAt, DataType, Model, Table, UpdatedAt } from 'sequelize-typescript';
+import { CreationOptional, InferAttributes, InferCreationAttributes, NonAttribute } from 'sequelize';
+import { BelongsToMany, Column, CreatedAt, DataType, Model, Table, UpdatedAt } from 'sequelize-typescript';
+import { Fornecedor } from '../../fornecedores/entities/fornecedor.entity';
+import { ProdutoFornecedor } from '../../produto-fornecedor/entities/produto-fornecedor.entity';
 import { CategoriaProduto } from '../enums/categoria-produto.enum';
 
 /**
@@ -78,4 +80,12 @@ export class Produto extends Model<
   @UpdatedAt
   @Column({ type: DataType.DATE, field: 'updated_at' })
   declare updated_at: CreationOptional<Date>;
+
+  /**
+   * Fornecedores associados a este produto (relação N:N via `produto_fornecedores`).
+   * Carregada sob demanda (ex.: `produto.$get('fornecedores')`); não faz parte do
+   * schema de resposta padrão.
+   */
+  @BelongsToMany(() => Fornecedor, () => ProdutoFornecedor)
+  declare fornecedores?: NonAttribute<Fornecedor[]>;
 }

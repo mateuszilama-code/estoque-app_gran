@@ -97,17 +97,18 @@ npm run start                # ou: npm run start:dev (modo watch)
 npm test                     # Jest + @swc/jest
 ```
 
-Com a API no ar:
-- **Swagger UI:** <http://localhost:3000/docs> — inclui o CRUD de **Fornecedor** (tag `fornecedores`)
-  e de **Produto** (tag `produtos`).
+Com a API no ar (**backend completo**):
+- **Swagger UI:** <http://localhost:3000/docs> — CRUD de **Fornecedor** (tag `fornecedores`) e de
+  **Produto** (tag `produtos`), e a **Associação** N:N (tag `associacao`).
 - **OpenAPI JSON:** <http://localhost:3000/docs-json>
 
 > **Rollback do banco:** `npm run db:migrate:undo` (última migration) · `npm run db:migrate:undo:all`
 > (todas) · `npm run db:seed:undo:all` (dados do seeder).
 >
-> **Endpoints já disponíveis:** `POST`/`GET /fornecedores` e `GET`/`PATCH`/`DELETE /fornecedores/:id`
-> (Etapa 4); `POST`/`GET /produtos` e `GET`/`PATCH`/`DELETE /produtos/:id` (Etapa 5). A Associação
-> Produto/Fornecedor entra na **Etapa 6**.
+> **Endpoints disponíveis:** `POST`/`GET /fornecedores` e `GET`/`PATCH`/`DELETE /fornecedores/:id`
+> (Etapa 4); `POST`/`GET /produtos` e `GET`/`PATCH`/`DELETE /produtos/:id` (Etapa 5); associação
+> `POST`/`GET /produtos/:produtoId/fornecedores`, `DELETE /produtos/:produtoId/fornecedores/:fornecedorId`
+> e `GET /fornecedores/:fornecedorId/produtos` (Etapa 6).
 
 ### Frontend (`apps/web`)
 
@@ -121,13 +122,13 @@ Com a API no ar:
 | --------- | --------- |
 | [docs/00-visao-geral.md](docs/00-visao-geral.md) | Documento mestre de acompanhamento: objetivo, stack e **histórico de todas as etapas**. |
 | [docs/sdd.html](docs/sdd.html) | **Software Design Document**: introdução, escopo funcional, arquitetura, modelo de domínio, decisões técnicas e histórico de revisões. |
-| **Swagger UI** → `http://localhost:3000/docs` | Documentação **viva** da API REST (OpenAPI), disponível após subir o backend. Já expõe o CRUD de Fornecedor (tag `fornecedores`). |
+| **Swagger UI** → `http://localhost:3000/docs` | Documentação **viva** da API REST (OpenAPI), disponível após subir o backend. Expõe todo o backend: tags `fornecedores`, `produtos` e `associacao`. |
 
 ---
 
 ## Status do Projeto
 
-**Etapa atual:** `Etapa 5 — Módulo Produto (CRUD + Swagger)` ✅
+**Etapa atual:** `Etapa 6 — Associação (N:N)` ✅ · **Backend completo** 🎉
 
 | Área | Situação |
 | ---- | -------- |
@@ -137,7 +138,7 @@ Com a API no ar:
 | 🗃️ Migrations e seeders (SQLite) | ✅ Concluída |
 | 🏢 Módulo Fornecedor (CRUD + validações) | ✅ Concluída |
 | 📦 Módulo Produto (CRUD + validações) | ✅ Concluída |
-| 🔗 Módulo Associação Produto/Fornecedor (N:N) | ⏳ Pendente |
+| 🔗 Módulo Associação Produto/Fornecedor (N:N) | ✅ Concluída |
 | 🖥️ Frontend — scaffold Next.js + design system | ⏳ Pendente |
 | 🧩 Telas (Fornecedor, Produto, Associação) | ⏳ Pendente |
 
