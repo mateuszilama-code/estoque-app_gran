@@ -1,4 +1,7 @@
 import type { Config } from 'tailwindcss';
+// Importado no topo, e não via `require()`: este arquivo tem `export default`,
+// então o Node o carrega como módulo ES — onde `require` não existe.
+import animate from 'tailwindcss-animate';
 
 /**
  * Design tokens do Sistema de Controle de Estoque.
@@ -118,7 +121,7 @@ const config: Config = {
       },
     },
   },
-  plugins: [require('tailwindcss-animate')],
+  plugins: [animate],
 };
 
 export default config;
