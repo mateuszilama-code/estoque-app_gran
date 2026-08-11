@@ -82,3 +82,4 @@ docs/[0-9][0-9]-*.md
 *.pdf
 prompts-claude-code-estoque.md
 plano-design-frontend-estoque.md
+skills-lock.json
