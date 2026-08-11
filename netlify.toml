@@ -1,0 +1,43 @@
+# ─────────────────────────────────────────────
+# Netlify — deploy do frontend (apps/web)
+#
+# Este repositório é um monorepo e NÃO tem package.json na raiz.
+# Sem este arquivo, o Netlify tenta publicar a raiz do repositório,
+# não encontra um index.html e responde "Page not found" em todas as
+# rotas. O `base` abaixo aponta a build para o app Next.js.
+#
+# O backend (apps/api, NestJS) NÃO é publicado aqui — precisa de
+# hospedagem própria (Render, Railway, Fly.io...).
+# ─────────────────────────────────────────────
+
+[build]
+  # Diretório onde o Netlify roda a instalação e o build.
+  base = "apps/web"
+
+  # Saída do Next.js, relativa ao `base` (ou seja, apps/web/.next).
+  publish = ".next"
+
+  command = "npm run build"
+
+[build.environment]
+  # Next.js 15 exige Node >= 18.18; fixamos a major para builds reprodutíveis.
+  NODE_VERSION = "20"
+
+# Runtime oficial do Next.js na Netlify: cria as funções que servem SSR,
+# rotas dinâmicas (/produtos/[id]/fornecedores) e os assets estáticos.
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# ─────────────────────────────────────────────
+# Variável obrigatória: NEXT_PUBLIC_API_URL
+#
+# Não fica declarada aqui porque depende da URL onde a API for publicada.
+# Configure em: Site configuration → Environment variables, ANTES do build.
+#
+# Atenção — dois pontos que costumam quebrar em produção:
+#   1. Variáveis NEXT_PUBLIC_* são embutidas no bundle no momento do build.
+#      Alterar o valor exige um novo deploy ("Clear cache and deploy site").
+#   2. O site da Netlify é servido por HTTPS. Se a API estiver em HTTP puro,
+#      o navegador bloqueia as requisições (mixed content). A API precisa
+#      estar em HTTPS.
+# ─────────────────────────────────────────────
